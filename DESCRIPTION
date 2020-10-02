@@ -1,15 +1,17 @@
 Package: HMIS
-Title: What the Package Does (One Line, Title Case)
+Title: Filters HMIS Data by Meaningful Date Ranges
 Version: 0.0.0.9000
 Authors@R: 
-    person(given = "First",
-           family = "Last",
+    c(person(given = "Genelle",
+           family = "Denzin",
            role = c("aut", "cre"),
-           email = "first.last@example.com",
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
-License: `use_mit_license()`, `use_gpl3_license()` or friends to
-    pick a license
+           email = "genelledenzin@cohhio.org"),
+     person(given = "Stephen",
+           family = "Holsenbeck",
+           role = c("ctb", "ctr"),
+           email = "sholsen@alumni.emory.edu"))
+Description: HMIS (Homeless Management Information Systems) is a data collection system defined by the US Dept of Housing and Urban Development (HUD). For more information, please visit https://www.hudexchange.info/programs/hmis/. This package will help HMIS Data Analysts work with homeless services data.
+License: use_agpl3_license()
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
