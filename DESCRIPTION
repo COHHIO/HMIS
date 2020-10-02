@@ -19,6 +19,8 @@ Imports:
   dplyr,
   purrr,
   rlang,
-  stringr
+  stringr,
+  dplyr
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
+Config/testthat/edition: 3
