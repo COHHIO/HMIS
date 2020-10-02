@@ -117,6 +117,7 @@ between_df <- function(., status, start = ReportStart, end = ReportEnd, lgl = FA
 #' @importFrom lubridate parse_date_time as_date
 #' @importFrom rlang abort
 
+
 check_dates <- function(start, end) {
   # Add input dates to list
   .dates <- list(start = start, end = end)
@@ -131,6 +132,7 @@ check_dates <- function(start, end) {
       } else if (inherits(.x, "character")) {
         # try these formats
         .out <- lubridate::parse_date_time(.x, c("Ymd", "mdY", "dmY"))
+        .out <- as.Date(.out)  
       } 
       if (!inherits(.out, c("Date"))) {
         # if none of those formats worked throw error and inform user which argument was not able to be parsed

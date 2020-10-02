@@ -1,16 +1,12 @@
 ReportStart <- "20200125"
 ReportEnd <- "30082020"
-if (basename(getwd()) == "testthat") {
-  .data_path <- fs::path("test-between", ext = "rds")
-} else {
-  .data_path <- fs::path("tests", "testthat", "test-between", ext = "rds")
-}
+.data_path <- fs::path("test-between", ext = "rds")
 dates <- c()
 test_data <- readRDS(.data_path)
 test_that("check_date outputs expected dates: ", {
   dates <<- check_dates(ReportStart, ReportEnd)
-  expect_equal(dates, vctrs::vec_c(start = lubridate::ymd("2020-01-25"), end = lubridate::ymd("2020-08-30"), .ptype = Date()))
-  expect_equal(check_dates("01012020", "02022020"), vctrs::vec_c(start = lubridate::ymd("2020-01-01"), end = lubridate::ymd("2020-02-02"), .ptype = Date()))
+  expect_equal(dates, vctrs::vec_c(start = lubridate::ymd("2020-01-25"), end = lubridate::ymd("2020-08-30"), .ptype = Sys.Date()))
+  expect_equal(check_dates("01012020", "02022020"), vctrs::vec_c(start = lubridate::ymd("2020-01-01"), end = lubridate::ymd("2020-02-02"), .ptype = Sys.Date()))
 })
 
 test_that("stayed_between filters properly", {
