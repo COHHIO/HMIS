@@ -131,6 +131,7 @@ check_dates <- function(start, end) {
       } else if (inherits(.x, "character")) {
         # try these formats
         .out <- lubridate::parse_date_time(.x, c("Ymd", "mdY", "dmY"))
+        .out <- as.Date(.out)  
       } 
       if (!inherits(.out, c("Date"))) {
         # if none of those formats worked throw error and inform user which argument was not able to be parsed
