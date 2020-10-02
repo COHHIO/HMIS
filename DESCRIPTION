@@ -14,5 +14,10 @@ Description: HMIS (Homeless Management Information Systems) is a data collection
 License: AGPL-3
 Encoding: UTF-8
 LazyData: true
+Imports:
+  lubridate,
+  purrr,
+  rlang,
+  stringr
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1

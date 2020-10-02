@@ -37,6 +37,7 @@
 #' @importFrom rlang abort sym `!!` expr eval_tidy
 #' @importFrom stringr str_detect
 #' @importFrom purrr map_lgl
+#' @importFrom dplyr filter
 
 
 between_df <- function(., status, start = ReportStart, end = ReportEnd, lgl = FALSE) {
