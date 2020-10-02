@@ -117,6 +117,7 @@ between_df <- function(., status, start = ReportStart, end = ReportEnd, lgl = FA
 #' @importFrom lubridate parse_date_time as_date
 #' @importFrom rlang abort
 
+
 check_dates <- function(start, end) {
   # Add input dates to list
   .dates <- list(start = start, end = end)
