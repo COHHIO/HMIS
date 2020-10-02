@@ -1,10 +1,6 @@
 ReportStart <- "20200125"
 ReportEnd <- "30082020"
-if (basename(getwd()) == "testthat") {
-  .data_path <- fs::path("test-between", ext = "rds")
-} else {
-  .data_path <- fs::path("tests", "testthat", "test-between", ext = "rds")
-}
+.data_path <- fs::path("test-between", ext = "rds")
 dates <- c()
 test_data <- readRDS(.data_path)
 test_that("check_date outputs expected dates: ", {
