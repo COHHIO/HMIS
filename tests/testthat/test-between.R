@@ -8,7 +8,8 @@ test_that("check_date outputs expected dates: ", {
   expect_equal(dates, vctrs::vec_c(start = lubridate::ymd("2020-01-25"), end = lubridate::ymd("2020-08-30"), .ptype = Sys.Date()))
   expect_equal(check_dates("01012020", "02022020"), vctrs::vec_c(start = lubridate::ymd("2020-01-01"), end = lubridate::ymd("2020-02-02"), .ptype = Sys.Date()))
 })
-
+ReportStart <- dates[[1]]
+ReportEnd <- dates[[2]]
 test_that("stayed_between filters properly", {
   .result <- stayed_between(test_data$stayed)
   expect_true(range(.result$ExitDate, na.rm = TRUE)[1] > dates["start"])
