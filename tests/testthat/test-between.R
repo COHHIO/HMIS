@@ -1,6 +1,11 @@
 ReportStart <- "20200125"
 ReportEnd <- "30082020"
-.data_path <- fs::path("test-between", ext = "rds")
+if (testthat::is_testing()) {
+  .data_path <- fs::path("test-between", ext = "rds")
+} else {
+  .data_path <- fs::path("tests", "testthat", "test-between", ext = "rds")
+}
+
 dates <- c()
 test_data <- readRDS(.data_path)
 test_that("check_date outputs expected dates: ", {
@@ -11,31 +16,31 @@ test_that("check_date outputs expected dates: ", {
 ReportStart <- dates[[1]]
 ReportEnd <- dates[[2]]
 test_that("stayed_between filters properly", {
-  .result <- stayed_between(test_data$stayed)
+  .result <- stayed_between(test_data$stayed, ReportStart, ReportEnd)
   expect_true(range(.result$ExitDate, na.rm = TRUE)[1] > dates["start"])
   expect_true(range(.result$EntryAdjust, na.rm = TRUE)[2] <= dates["end"])
 })
 
 test_that("served_between filters properly", {
-  .result <- served_between(test_data$served)
+  .result <- served_between(test_data$served, ReportStart, ReportEnd)
   expect_true(range(.result$ExitDate, na.rm = TRUE)[1] > dates["start"])
   expect_true(range(.result$EntryDate, na.rm = TRUE)[2] <= dates["end"])
 })
 
 test_that("entered_between filters properly", {
-  .result <- entered_between(test_data$entered)
+  .result <- entered_between(test_data$entered, ReportStart, ReportEnd)
   .r <- range(.result$EntryDate, na.rm = TRUE)
   expect_true(all(.r >= dates["start"] & .r <= dates["end"]))
 })
 
 test_that("exited_between filters properly", {
-  .result <- exited_between(test_data$exited)
+  .result <- exited_between(test_data$exited, ReportStart, ReportEnd)
   .r <- range(.result$ExitDate, na.rm = TRUE)
   expect_true(all(.r >= dates["start"] & .r <= dates["end"]))
 })
 
 test_that("operating_between filters properly", {
-  .result <- operating_between(test_data$operating)
+  .result <- operating_between(test_data$operating, ReportStart, ReportEnd)
   expect_false(any(is.na(.result$OperatingStartDate))) 
   .r <- range(.result$OperatingStartDate)
   expect_true(all(.r <= dates["end"]))
@@ -43,7 +48,7 @@ test_that("operating_between filters properly", {
 })
 
 test_that("beds_available_between filters properly", {
-  .result <- beds_available_between(test_data$beds_available)
+  .result <- beds_available_between(test_data$beds_available, ReportStart, ReportEnd)
   expect_false(any(is.na(.result$InventoryStartDate))) 
   .r <- range(.result$InventoryStartDate)
   expect_true(all(.r <= dates["end"]))

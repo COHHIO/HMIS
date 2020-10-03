@@ -49,7 +49,8 @@ between_df <- function(., status, start = ReportStart, end = ReportEnd, lgl = FA
     rlang::abort("Please supply a status. See ?between_df for details.")
   } 
   # Check calling context - if inside of a filter call, return the logical
-  .lgl <- sum(purrr::map_lgl(sys.calls(), ~{any(grepl("filter", as.character(.x)))})[-1]) > 1
+  .lgl <- purrr::map_lgl(tail(sys.calls(),5), ~{any(grepl("eval_all_filter", as.character(.x)))})
+  .lgl <- sum(.lgl) > 0
   # Convert that to a character for regex parsing
   .cn_chr <- tolower(substr(status, 0, 2))
   # If it's one of served of stayed
