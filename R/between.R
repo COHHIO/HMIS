@@ -8,20 +8,24 @@ ReportEnd <- NULL
 #' @name between_df
 #' @family _between
 #' @keywords Internal
-#' @description Context sensitive quick filtering or output of logical based on 
-#'  `start` and `end` Dates. 
+#' @description Context-sensitive quick filtering or output of logical based on 
+#'  `start` and `end` dates. Primary data elements required for this package
+#'  to work fully: EnrollmentID, EntryDate, EntryAdjust (which will need to be
+#'  created based on ProjectType of the ProjectID associated with the Enrollment 
+#'  and MoveInDate), and ExitDate. (Future version will not use EntryAdjust but 
+#'  will require ProjectType and MoveInDate.)
 #' 
 #' @param . \code{(data.frame/tibble)} Input to be filtered. In a `magrittr` 
 #'  pipe this will always be the first object
 #' 
 #' @param status \code{(character)} One of:
 #' \itemize{
-#'   \item{\code{"served"/"se"}}{ Equivalent of \code{served_between}}
-#'   \item{\code{"stayed"/"st"}}{ Equivalent of \code{stayed_between}}
-#'   \item{\code{"entered"/"en"}}{ Equivalent of \code{entered_between}}
-#'   \item{\code{"exited"/"ex"}}{ Equivalent of \code{exited_between}}
-#'   \item{\code{"operating"/"op"}}{ Equivalent of \code{operating_between}}
-#'   \item{\code{"beds_available"/"be"/"ba"}}{ Equivalent of \code{beds_available_between}}
+#'   \item{\code{"served"}}{ Equivalent of \code{served_between}}
+#'   \item{\code{"stayed"}}{ Equivalent of \code{stayed_between}}
+#'   \item{\code{"entered"}}{ Equivalent of \code{entered_between}}
+#'   \item{\code{"exited"}}{ Equivalent of \code{exited_between}}
+#'   \item{\code{"operating"}}{ Equivalent of \code{operating_between}}
+#'   \item{\code{"beds_available"}}{ Equivalent of \code{beds_available_between}}
 #' }
 #'  that specifies the type of function to be performed
 #' 
@@ -74,13 +78,13 @@ between_df <- function(., status, start = ReportStart, end = ReportEnd, lgl = FA
                          ~{any(grepl("eval_all_filter", as.character(.x)))})
   .lgl <- sum(.lgl) > 0
   # Convert that to a character for regex parsing
-  .cn_chr <- tolower(substr(status, 0, 2))
+  .cn_chr <- tolower(status)
   # If it's one of served of stayed
-  if (stringr::str_detect(.cn_chr, "se|st")) {
-    if (stringr::str_detect(.cn_chr, "se")) {
+  if (stringr::str_detect(.cn_chr, "served|stayed")) {
+    if (stringr::str_detect(.cn_chr, "served")) {
       # if served use entrydate
       .col <- rlang::sym("EntryDate")
-    } else if (stringr::str_detect(.cn_chr, "st")) {
+    } else if (stringr::str_detect(.cn_chr, "stayed")) {
       # if stayed used entryadjust
       .col <- rlang::sym("EntryAdjust")
     }
@@ -92,12 +96,12 @@ between_df <- function(., status, start = ReportStart, end = ReportEnd, lgl = FA
       #filter the appropriate columns
       .out <- dplyr::filter(., !!.cond)
     }
-  } else if (stringr::str_detect(.cn_chr, "en|ex")) {
+  } else if (stringr::str_detect(.cn_chr, "entered|exited")) {
     # if its entered or exited
-    if (stringr::str_detect(.cn_chr, "en")) {
+    if (stringr::str_detect(.cn_chr, "entered")) {
       # if entered use entrydate
       .col <- rlang::sym("EntryDate")
-    } else if (stringr::str_detect(.cn_chr, "ex")) {
+    } else if (stringr::str_detect(.cn_chr, "exited")) {
       #if exited use exit date
       .col <- rlang::sym("ExitDate")
     }
@@ -108,10 +112,10 @@ between_df <- function(., status, start = ReportStart, end = ReportEnd, lgl = FA
       #filter the appropriate columns
       .out <- dplyr::filter(., !!.cond)
     }
-  } else if (stringr::str_detect(.cn_chr, "ba|be|op")) {
+  } else if (stringr::str_detect(.cn_chr, "beds_available|operating")) {
     if (stringr::str_detect(.cn_chr, "op")) {
       .prefix <- "Operating"
-    } else if (stringr::str_detect(.cn_chr, "be|ba")) {
+    } else if (stringr::str_detect(.cn_chr, "beds_available")) {
       .prefix <- "Inventory"
     }
     # Construct column names from prefixes
@@ -224,7 +228,7 @@ stayed_between <- function(., start = ReportStart, end = ReportEnd, lgl = FALSE)
 #' @family _between
 #' @export
 operating_between <- function(., start = ReportStart, end = ReportEnd, lgl = FALSE){
-  between_df(., "op", start, end, lgl)
+  between_df(., "operating", start, end, lgl)
 }
 
 #' @title beds_available_between
@@ -233,5 +237,5 @@ operating_between <- function(., start = ReportStart, end = ReportEnd, lgl = FAL
 #' @family _between
 #' @export
 beds_available_between <- function(., start = ReportStart, end = ReportEnd, lgl = FALSE){
-  between_df(., "ba", start, end, lgl)
+  between_df(., "beds_available", start, end, lgl)
 }

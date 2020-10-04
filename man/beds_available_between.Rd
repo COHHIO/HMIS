@@ -27,8 +27,12 @@ named other than ReportEnd, it must be specified.}
 appropriate columns
 }
 \description{
-Context sensitive quick filtering or output of logical based on
-\code{start} and \code{end} Dates.
+Context-sensitive quick filtering or output of logical based on
+\code{start} and \code{end} dates. Primary data elements required for this package
+to work fully: EnrollmentID, EntryDate, EntryAdjust (which will need to be
+created based on ProjectType of the ProjectID associated with the Enrollment
+and MoveInDate), and ExitDate. (Future version will not use EntryAdjust but
+will require ProjectType and MoveInDate.)
 }
 \details{
 Context-sensitive: Automatically detects if nested inside
@@ -44,6 +48,7 @@ served_between(qpr_leavers),
 qpr_leavers \%>\% filter(served_between(.))
 )
 }
+
 }
 \seealso{
 Other _between: 

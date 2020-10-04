@@ -12,12 +12,12 @@ pipe this will always be the first object}
 
 \item{status}{\code{(character)} One of:
 \itemize{
-\item{\code{"served"/"se"}}{ Equivalent of \code{served_between}}
-\item{\code{"stayed"/"st"}}{ Equivalent of \code{stayed_between}}
-\item{\code{"entered"/"en"}}{ Equivalent of \code{entered_between}}
-\item{\code{"exited"/"ex"}}{ Equivalent of \code{exited_between}}
-\item{\code{"operating"/"op"}}{ Equivalent of \code{operating_between}}
-\item{\code{"beds_available"/"be"/"ba"}}{ Equivalent of \code{beds_available_between}}
+\item{\code{"served"}}{ Equivalent of \code{served_between}}
+\item{\code{"stayed"}}{ Equivalent of \code{stayed_between}}
+\item{\code{"entered"}}{ Equivalent of \code{entered_between}}
+\item{\code{"exited"}}{ Equivalent of \code{exited_between}}
+\item{\code{"operating"}}{ Equivalent of \code{operating_between}}
+\item{\code{"beds_available"}}{ Equivalent of \code{beds_available_between}}
 }
 that specifies the type of function to be performed}
 
@@ -38,8 +38,12 @@ named other than ReportEnd, it must be specified.}
 appropriate columns
 }
 \description{
-Context sensitive quick filtering or output of logical based on
-\code{start} and \code{end} Dates.
+Context-sensitive quick filtering or output of logical based on
+\code{start} and \code{end} dates. Primary data elements required for this package
+to work fully: EnrollmentID, EntryDate, EntryAdjust (which will need to be
+created based on ProjectType of the ProjectID associated with the Enrollment
+and MoveInDate), and ExitDate. (Future version will not use EntryAdjust but
+will require ProjectType and MoveInDate.)
 }
 \details{
 Context-sensitive: Automatically detects if nested inside
@@ -55,6 +59,7 @@ served_between(qpr_leavers),
 qpr_leavers \%>\% filter(served_between(.))
 )
 }
+
 }
 \seealso{
 Other _between: 

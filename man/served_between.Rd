@@ -27,10 +27,8 @@ named other than ReportEnd, it must be specified.}
 appropriate columns
 }
 \description{
-Filters a dataframe of Enrollments with an Entry Date on or prior
-to your Report Start Date and either a null Exit Date or the Exit Date is on
-or after your Report End Date. This would include any household whose stay
-overlaps the date range at all.
+Filters a dataframe of Enrollments that overlap the ReportStart
+to ReportEnd date range.
 }
 \details{
 Context-sensitive: Automatically detects if nested inside
@@ -46,6 +44,7 @@ served_between(qpr_leavers),
 qpr_leavers \%>\% filter(served_between(.))
 )
 }
+
 }
 \seealso{
 stayed_between()
