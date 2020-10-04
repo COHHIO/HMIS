@@ -1,4 +1,5 @@
-
+ReportStart <- NULL
+ReportEnd <- NULL
 
 
 
@@ -38,9 +39,11 @@
 #' @importFrom stringr str_detect
 #' @importFrom purrr map_lgl
 #' @importFrom dplyr filter
+#' @importFrom utils tail
 
 
 between_df <- function(., status, start = ReportStart, end = ReportEnd, lgl = FALSE) {
+  ExitDate <- NULL
   #Check date format and coerce if need be
   dates <- check_dates(start, end)
   
