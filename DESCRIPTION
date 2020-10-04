@@ -16,6 +16,7 @@ Encoding: UTF-8
 LazyData: true
 Imports:
   lubridate,
+  vctrs,
   purrr,
   rlang,
   stringr,
