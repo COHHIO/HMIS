@@ -162,14 +162,14 @@ check_dates <- function(start, end) {
 #' overlaps the date range at all.
 #' @seealso stayed_between()
 #' @examples 
-#' ReportStartDate <- sample(seq.Date(from = Sys.Date() - 365, to = Sys.Date() - 1, "days"), 1)
-#' ReportEndDate <-  Sys.Date()
+#' ReportStart <- sample(seq.Date(from = Sys.Date() - 365, to = Sys.Date() - 1, "days"), 1)
+#' ReportEnd <-  Sys.Date()
 #' enrollments <- data.frame(PersonalID = sample(12000:20000, 10),
 #' EntryDate = c("01012019", "06012018", "08192020", "06102019", "03232020",
 #'  "12122019", "03162020", "08312019", "01062020", "07202018"),
 #' ExitDate = c("03012019", "09052019", "10012020", "08162019", "05062020",
 #'   NA, "04012020", "09252020", "06012020", "08062019"))
-#' enrollments %>% filter(HMIS::served_between(.)) # doesn't work
+#' enrollments %>% filter(HMIS::served_between()) 
 #' @export
 
 served_between <- function(., start = ReportStart, end = ReportEnd, lgl = FALSE) {
