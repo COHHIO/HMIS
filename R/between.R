@@ -114,7 +114,7 @@ between_df <- function(., status, start = ReportStart, end = ReportEnd, lgl = FA
 # CHANGED Check and coerce dates as sub-function to split between_ into two logical segments, one which outputs a data.frame (for use in Rminor) and one which outputs a logical for use in COHHIO_HMIS
 #' @title check_dates
 #' @name check_dates
-#' @description coerce start/end input values to Date's
+#' @description coerce start/end input values to dates
 #' @inheritParams between_df
 #' @keywords Internal
 #' @importFrom purrr map_lgl imap
@@ -156,6 +156,20 @@ check_dates <- function(start, end) {
 #' @family _between
 #' @inherit between_df
 #' @inheritParams between_df
+#' @description Filters a dataframe of Enrollments with an Entry Date on or prior 
+#' to your Report Start Date and either a null Exit Date or the Exit Date is on 
+#' or after your Report End Date. This would include any household whose stay
+#' overlaps the date range at all.
+#' @seealso stayed_between()
+#' @examples 
+#' ReportStartDate <- sample(seq.Date(from = Sys.Date() - 365, to = Sys.Date() - 1, "days"), 1)
+#' ReportEndDate <-  Sys.Date()
+#' enrollments <- data.frame(PersonalID = sample(12000:20000, 10),
+#' EntryDate = c("01012019", "06012018", "08192020", "06102019", "03232020",
+#'  "12122019", "03162020", "08312019", "01062020", "07202018"),
+#' ExitDate = c("03012019", "09052019", "10012020", "08162019", "05062020",
+#'   NA, "04012020", "09252020", "06012020", "08062019"))
+#' enrollments %>% filter(HMIS::served_between(.)) # doesn't work
 #' @export
 
 served_between <- function(., start = ReportStart, end = ReportEnd, lgl = FALSE) {
