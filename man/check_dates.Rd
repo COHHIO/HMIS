@@ -12,6 +12,6 @@ check_dates(start, end)
 \item{end}{\code{character/Date} of the end of the timeframe. Characters in format mdY, Ymd, dmY acceptable.  \strong{Default \code{ReportEnd}} will be automatically retrieved from parent environments if not specified. If end is named other than ReportEnd, it must be specified.}
 }
 \description{
-coerce start/end input values to Date's
+coerce start/end input values to dates
 }
 \keyword{Internal}
