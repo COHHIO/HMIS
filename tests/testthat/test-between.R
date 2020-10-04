@@ -1,13 +1,4 @@
-ReportStart <- "20200125"
-ReportEnd <- "30082020"
-if (testthat::is_testing()) {
-  .data_path <- fs::path("test-between", ext = "rds")
-} else {
-  .data_path <- fs::path("tests", "testthat", "test-between", ext = "rds")
-}
 
-dates <- c()
-test_data <- readRDS(.data_path)
 test_that("check_date outputs expected dates: ", {
   dates <<- check_dates(ReportStart, ReportEnd)
   expect_equal(dates, vctrs::vec_c(start = lubridate::ymd("2020-01-25"), end = lubridate::ymd("2020-08-30"), .ptype = Sys.Date()))
