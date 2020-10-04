@@ -8,8 +8,12 @@ ReportEnd <- NULL
 #' @name between_df
 #' @family _between
 #' @keywords Internal
-#' @description Context sensitive quick filtering or output of logical based on `start` and `end` Dates. 
-#' @param . \code{(data.frame/tibble)} Input to be filtered. In a `magrittr` pipe this will always be the first object
+#' @description Context sensitive quick filtering or output of logical based on 
+#'  `start` and `end` Dates. 
+#' 
+#' @param . \code{(data.frame/tibble)} Input to be filtered. In a `magrittr` 
+#'  pipe this will always be the first object
+#' 
 #' @param status \code{(character)} One of:
 #' \itemize{
 #'   \item{\code{"served"/"se"}}{ Equivalent of \code{served_between}}
@@ -19,12 +23,25 @@ ReportEnd <- NULL
 #'   \item{\code{"operating"/"op"}}{ Equivalent of \code{operating_between}}
 #'   \item{\code{"beds_available"/"be"/"ba"}}{ Equivalent of \code{beds_available_between}}
 #' }
-#' that specifies the type of function to be performed
-#' @param start \code{character/Date} of the end of the timeframe. Characters in format mdY, Ymd, dmY acceptable.  **Default `ReportStart`** will be automatically retrieved from parent environments if not specified. If end is named other than ReportStart, it must be specified. 
-#' @param end \code{character/Date} of the end of the timeframe. Characters in format mdY, Ymd, dmY acceptable.  **Default `ReportEnd`** will be automatically retrieved from parent environments if not specified. If end is named other than ReportEnd, it must be specified. 
+#'  that specifies the type of function to be performed
+#' 
+#' @param start \code{character/Date} of the end of the timeframe. Characters 
+#'  in format mdY, Ymd, dmY acceptable.  **Default `ReportStart`** will be 
+#'  automatically retrieved from parent environments if not specified. If end is 
+#'  named other than ReportStart, it must be specified. 
+#'  
+#' @param end \code{character/Date} of the end of the timeframe. Characters in 
+#'  format mdY, Ymd, dmY acceptable.  **Default `ReportEnd`** will be 
+#'  automatically retrieved from parent environments if not specified. If end is 
+#'  named other than ReportEnd, it must be specified. 
+#'  
 #' @param lgl \code{logical} Flag to force logical vector output. **Default `FALSE`**
-#' @details Context-sensitive: Automatically detects if nested inside of \link[dplyr]{filter} call, if so returns `logical` instead of `data.frame`
-#' @return \code{data.frame/logical} after filtering/applying conditional to the appropriate columns
+#' 
+#' @details Context-sensitive: Automatically detects if nested inside 
+#'  of \link[dplyr]{filter} call, if so returns `logical` instead of `data.frame`
+#'  
+#' @return \code{data.frame/logical} after filtering/applying conditional to the 
+#'  appropriate columns
 #' @examples 
 #' \dontrun{
 #' library(dplyr)
@@ -35,6 +52,7 @@ ReportEnd <- NULL
 #' qpr_leavers %>% filter(served_between(.))
 #' )
 #' }
+#' 
 #' @importFrom rlang abort sym `!!` expr eval_tidy
 #' @importFrom stringr str_detect
 #' @importFrom purrr map_lgl
@@ -52,7 +70,8 @@ between_df <- function(., status, start = ReportStart, end = ReportEnd, lgl = FA
     rlang::abort("Please supply a status. See ?between_df for details.")
   } 
   # Check calling context - if inside of a filter call, return the logical
-  .lgl <- purrr::map_lgl(tail(sys.calls(),5), ~{any(grepl("eval_all_filter", as.character(.x)))})
+  .lgl <- purrr::map_lgl(tail(sys.calls(),5), 
+                         ~{any(grepl("eval_all_filter", as.character(.x)))})
   .lgl <- sum(.lgl) > 0
   # Convert that to a character for regex parsing
   .cn_chr <- tolower(substr(status, 0, 2))
@@ -65,7 +84,8 @@ between_df <- function(., status, start = ReportStart, end = ReportEnd, lgl = FA
       # if stayed used entryadjust
       .col <- rlang::sym("EntryAdjust")
     }
-    .cond <- rlang::expr(!!.col <= dates["end"] & (is.na(ExitDate) | ExitDate >= dates["start"]))
+    .cond <- rlang::expr(!!.col <= dates["end"] & 
+                           (is.na(ExitDate) | ExitDate >= dates["start"]))
     if (.lgl || lgl) {
       .out <- rlang::eval_tidy(.cond, data = .)
     } else {
@@ -111,7 +131,9 @@ between_df <- function(., status, start = ReportStart, end = ReportEnd, lgl = FA
 }
 
 
-# CHANGED Check and coerce dates as sub-function to split between_ into two logical segments, one which outputs a data.frame (for use in Rminor) and one which outputs a logical for use in COHHIO_HMIS
+# CHANGED Check and coerce dates as sub-function to split between_ into two 
+#  logical segments, one which outputs a data.frame (for use in Rminor) and one 
+#  which outputs a logical for use in COHHIO_HMIS
 #' @title check_dates
 #' @name check_dates
 #' @description coerce start/end input values to dates
@@ -139,37 +161,30 @@ check_dates <- function(start, end) {
         .out <- as.Date(.out)  
       } 
       if (!inherits(.out, c("Date"))) {
-        # if none of those formats worked throw error and inform user which argument was not able to be parsed
-        rlang::abort(paste0(.y, " could not be parsed to a Datetime, please check argument."))
+        # if none of those formats worked throw error and inform user which 
+        # argument was not able to be parsed
+        rlang::abort(paste(.y, 
+                           "could not be parsed to a Datetime, please check argument."))
       }
       .out
     })
-    # bind the coerced Date/Datetimes to the environment, overwriting the existing values
+    # bind the coerced Date/Datetimes to the environment, overwriting the 
+    # existing values
   } 
   do.call(c,.dates)
 }
 
 
-# Client Entry Exits Between Date Range Functions -------------------------------------
+# Client Entry Exits Between Date Range Functions -------------------------
+
 #' @title served_between
 #' @name served_between
 #' @family _between
 #' @inherit between_df
 #' @inheritParams between_df
-#' @description Filters a dataframe of Enrollments with an Entry Date on or prior 
-#' to your Report Start Date and either a null Exit Date or the Exit Date is on 
-#' or after your Report End Date. This would include any household whose stay
-#' overlaps the date range at all.
+#' @description Filters a dataframe of Enrollments that overlap the ReportStart 
+#' to ReportEnd date range.
 #' @seealso stayed_between()
-#' @examples 
-#' ReportStart <- sample(seq.Date(from = Sys.Date() - 365, to = Sys.Date() - 1, "days"), 1)
-#' ReportEnd <-  Sys.Date()
-#' enrollments <- data.frame(PersonalID = sample(12000:20000, 10),
-#' EntryDate = c("01012019", "06012018", "08192020", "06102019", "03232020",
-#'  "12122019", "03162020", "08312019", "01062020", "07202018"),
-#' ExitDate = c("03012019", "09052019", "10012020", "08162019", "05062020",
-#'   NA, "04012020", "09252020", "06012020", "08062019"))
-#' enrollments %>% filter(HMIS::served_between()) 
 #' @export
 
 served_between <- function(., start = ReportStart, end = ReportEnd, lgl = FALSE) {

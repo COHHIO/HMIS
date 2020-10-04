@@ -7,9 +7,15 @@
 check_dates(start, end)
 }
 \arguments{
-\item{start}{\code{character/Date} of the end of the timeframe. Characters in format mdY, Ymd, dmY acceptable.  \strong{Default \code{ReportStart}} will be automatically retrieved from parent environments if not specified. If end is named other than ReportStart, it must be specified.}
+\item{start}{\code{character/Date} of the end of the timeframe. Characters
+in format mdY, Ymd, dmY acceptable.  \strong{Default \code{ReportStart}} will be
+automatically retrieved from parent environments if not specified. If end is
+named other than ReportStart, it must be specified.}
 
-\item{end}{\code{character/Date} of the end of the timeframe. Characters in format mdY, Ymd, dmY acceptable.  \strong{Default \code{ReportEnd}} will be automatically retrieved from parent environments if not specified. If end is named other than ReportEnd, it must be specified.}
+\item{end}{\code{character/Date} of the end of the timeframe. Characters in
+format mdY, Ymd, dmY acceptable.  \strong{Default \code{ReportEnd}} will be
+automatically retrieved from parent environments if not specified. If end is
+named other than ReportEnd, it must be specified.}
 }
 \description{
 coerce start/end input values to dates

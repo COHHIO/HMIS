@@ -7,22 +7,32 @@
 stayed_between(., start = ReportStart, end = ReportEnd, lgl = FALSE)
 }
 \arguments{
-\item{.}{\code{(data.frame/tibble)} Input to be filtered. In a \code{magrittr} pipe this will always be the first object}
+\item{.}{\code{(data.frame/tibble)} Input to be filtered. In a \code{magrittr}
+pipe this will always be the first object}
 
-\item{start}{\code{character/Date} of the end of the timeframe. Characters in format mdY, Ymd, dmY acceptable.  \strong{Default \code{ReportStart}} will be automatically retrieved from parent environments if not specified. If end is named other than ReportStart, it must be specified.}
+\item{start}{\code{character/Date} of the end of the timeframe. Characters
+in format mdY, Ymd, dmY acceptable.  \strong{Default \code{ReportStart}} will be
+automatically retrieved from parent environments if not specified. If end is
+named other than ReportStart, it must be specified.}
 
-\item{end}{\code{character/Date} of the end of the timeframe. Characters in format mdY, Ymd, dmY acceptable.  \strong{Default \code{ReportEnd}} will be automatically retrieved from parent environments if not specified. If end is named other than ReportEnd, it must be specified.}
+\item{end}{\code{character/Date} of the end of the timeframe. Characters in
+format mdY, Ymd, dmY acceptable.  \strong{Default \code{ReportEnd}} will be
+automatically retrieved from parent environments if not specified. If end is
+named other than ReportEnd, it must be specified.}
 
 \item{lgl}{\code{logical} Flag to force logical vector output. \strong{Default \code{FALSE}}}
 }
 \value{
-\code{data.frame/logical} after filtering/applying conditional to the appropriate columns
+\code{data.frame/logical} after filtering/applying conditional to the
+appropriate columns
 }
 \description{
-Context sensitive quick filtering or output of logical based on \code{start} and \code{end} Dates.
+Context sensitive quick filtering or output of logical based on
+\code{start} and \code{end} Dates.
 }
 \details{
-Context-sensitive: Automatically detects if nested inside of \link[dplyr]{filter} call, if so returns \code{logical} instead of \code{data.frame}
+Context-sensitive: Automatically detects if nested inside
+of \link[dplyr]{filter} call, if so returns \code{logical} instead of \code{data.frame}
 }
 \examples{
 \dontrun{

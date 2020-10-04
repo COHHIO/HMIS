@@ -7,16 +7,24 @@
 served_between(., start = ReportStart, end = ReportEnd, lgl = FALSE)
 }
 \arguments{
-\item{.}{\code{(data.frame/tibble)} Input to be filtered. In a \code{magrittr} pipe this will always be the first object}
+\item{.}{\code{(data.frame/tibble)} Input to be filtered. In a \code{magrittr}
+pipe this will always be the first object}
 
-\item{start}{\code{character/Date} of the end of the timeframe. Characters in format mdY, Ymd, dmY acceptable.  \strong{Default \code{ReportStart}} will be automatically retrieved from parent environments if not specified. If end is named other than ReportStart, it must be specified.}
+\item{start}{\code{character/Date} of the end of the timeframe. Characters
+in format mdY, Ymd, dmY acceptable.  \strong{Default \code{ReportStart}} will be
+automatically retrieved from parent environments if not specified. If end is
+named other than ReportStart, it must be specified.}
 
-\item{end}{\code{character/Date} of the end of the timeframe. Characters in format mdY, Ymd, dmY acceptable.  \strong{Default \code{ReportEnd}} will be automatically retrieved from parent environments if not specified. If end is named other than ReportEnd, it must be specified.}
+\item{end}{\code{character/Date} of the end of the timeframe. Characters in
+format mdY, Ymd, dmY acceptable.  \strong{Default \code{ReportEnd}} will be
+automatically retrieved from parent environments if not specified. If end is
+named other than ReportEnd, it must be specified.}
 
 \item{lgl}{\code{logical} Flag to force logical vector output. \strong{Default \code{FALSE}}}
 }
 \value{
-\code{data.frame/logical} after filtering/applying conditional to the appropriate columns
+\code{data.frame/logical} after filtering/applying conditional to the
+appropriate columns
 }
 \description{
 Filters a dataframe of Enrollments with an Entry Date on or prior
@@ -25,17 +33,19 @@ or after your Report End Date. This would include any household whose stay
 overlaps the date range at all.
 }
 \details{
-Context-sensitive: Automatically detects if nested inside of \link[dplyr]{filter} call, if so returns \code{logical} instead of \code{data.frame}
+Context-sensitive: Automatically detects if nested inside
+of \link[dplyr]{filter} call, if so returns \code{logical} instead of \code{data.frame}
 }
 \examples{
-ReportStartDate <- sample(seq.Date(from = Sys.Date() - 365, to = Sys.Date() - 1, "days"), 1)
-ReportEndDate <-  Sys.Date()
-enrollments <- data.frame(PersonalID = sample(12000:20000, 10),
-EntryDate = c("01012019", "06012018", "08192020", "06102019", "03232020",
- "12122019", "03162020", "08312019", "01062020", "07202018"),
-ExitDate = c("03012019", "09052019", "10012020", "08162019", "05062020",
-  NA, "04012020", "09252020", "06012020", "08062019"))
-enrollments \%>\% filter(HMIS::served_between(.)) # doesn't work
+\dontrun{
+library(dplyr)
+ReportStart = Sys.Date() - lubridate::weeks(4)
+ReportEnd = Sys.Date()
+identical(
+served_between(qpr_leavers),
+qpr_leavers \%>\% filter(served_between(.))
+)
+}
 }
 \seealso{
 stayed_between()
