@@ -54,7 +54,7 @@ appropriate columns
 \description{
 Context-sensitive quick filtering or output of logical based on
 a date range. All assumptions about the data are based on the most recent
-HUD HMIS Data Standards. \url{https://www.hudexchange.info/resource/3824/hmis-data-dictionary}
+\href{https://www.hudexchange.info/resource/3824/hmis-data-dictionary}{HUD HMIS Data Standards}.
 The family of *_between functions helps HMIS data analysts easily shape
 enrollment or project descriptor data based on a single date range, avoiding
 errors and repeated code.
@@ -89,4 +89,3 @@ Other _between:
 \code{\link{stayed_between}()}
 }
 \concept{_between}
-\keyword{Internal}

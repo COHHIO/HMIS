@@ -5,22 +5,21 @@ ReportEnd <- NULL
 #' @title between_df
 #'
 #' @name between_df
+#' 
 #' @family _between
 #'
-#' @keywords Internal
-#'
 #' @description Context-sensitive quick filtering or output of logical based on
-#'  a date range. All assumptions about the data are based on the most recent 
-#'  HUD HMIS Data Standards. \url{https://www.hudexchange.info/resource/3824/hmis-data-dictionary}
-#'  The family of *_between functions helps HMIS data analysts easily shape
-#'  enrollment or project descriptor data based on a single date range, avoiding
-#'  errors and repeated code.
+#'   a date range. All assumptions about the data are based on the most recent 
+#'   \href{https://www.hudexchange.info/resource/3824/hmis-data-dictionary}{HUD HMIS Data Standards}.
+#'   The family of *_between functions helps HMIS data analysts easily shape
+#'   enrollment or project descriptor data based on a single date range, avoiding
+#'   errors and repeated code.
 #'
 #' @param . data.frame/tibble. In a `magrittr`, pipe this will always be the
-#' first object
+#'   first object
 #'
 #' @param status character, One of "served", "stayed", "entered", "exited",
-#' "operating", or "beds_available".
+#'   "operating", or "beds_available".
 #' \itemize{
 #'   \item{\code{"served"}}{ Enrollments that overlap the date range specified,
 #'   based on Entry and Exit Dates. Equivalent of \code{served_between()}}
