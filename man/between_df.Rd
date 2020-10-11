@@ -12,26 +12,26 @@ first object}
 
 \item{status}{character, One of "served", "stayed", "entered", "exited",
 "operating", or "beds_available".
-\itemize{
-\item{\code{"served"}}{ Enrollments that overlap the date range specified,
+\describe{
+\item{"served"}{ Enrollments that overlap the date range specified,
 based on Entry and Exit Dates. Equivalent of \code{served_between()}}
-\item{\code{"stayed"}}{ Enrollments that overlap the date range specified,
+\item{"stayed"}{ Enrollments that overlap the date range specified,
 based on Exit and the Entry Dates for ES, SH, TH projects and Move In Dates
 for RRH and PSH projects. Requires an EntryAdjust variable in the
 dataframe. EntryAdjust is based on the ProjectType of the ProjectID
 associated with the Enrollment and a valid MoveInDate. (Future version will
 not require EntryAdjust as long as ProjectType and a valid MoveInDate are
 present in the dataset.) Equivalent of \code{stayed_between()}}
-\item{\code{"entered"}}{ Enrollments where the Entry Date is in the date
+\item{"entered"}{ Enrollments where the Entry Date is in the date
 range specified. Used to find households who entered during date range.
 Equivalent of \code{entered_between()}}
-\item{\code{"exited"}}{ Enrollments where the Exit Date is in the date range
+\item{"exited"}{ Enrollments where the Exit Date is in the date range
 specified. Used to find households who exited during date range.
 Equivalent of \code{exited_between()}}
-\item{\code{"operating"}}{ Projects where the Operating Start and End dates
+\item{"operating"}{ Projects where the Operating Start and End dates
 overlap the date range specified, including those with null Operating End
 Dates. Equivalent of \code{operating_between()}}
-\item{\code{"beds_available"}}{ Projects with active beds during the date
+\item{"beds_available"}{ Projects with active beds during the date
 range specified. Equivalent of \code{beds_available_between()}}
 }}
 
