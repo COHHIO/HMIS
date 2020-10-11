@@ -7,42 +7,43 @@
 exited_between(., start = ReportStart, end = ReportEnd, lgl = FALSE)
 }
 \arguments{
-\item{.}{\code{(data.frame/tibble)} Input to be filtered. In a \code{magrittr}
-pipe this will always be the first object}
+\item{.}{data.frame/tibble. In a \code{magrittr}, pipe this will always be the
+first object}
 
-\item{start}{\code{character/Date} of the end of the timeframe. Characters
-in format mdY, Ymd, dmY acceptable.  \strong{Default \code{ReportStart}} will be
-automatically retrieved from parent environments if not specified. If end is
-named other than ReportStart, it must be specified.}
+\item{start}{Default = ReportStart, character/date of the start of the date
+range. Characters in format mdY, Ymd, dmY acceptable. Will be automatically
+retrieved from parent environments if not specified. If start is named other
+than ReportStart, it must be specified.}
 
-\item{end}{\code{character/Date} of the end of the timeframe. Characters in
-format mdY, Ymd, dmY acceptable.  \strong{Default \code{ReportEnd}} will be
-automatically retrieved from parent environments if not specified. If end is
-named other than ReportEnd, it must be specified.}
+\item{end}{Default = ReportEnd, character/date of the end of the date range.
+Characters in format mdY, Ymd, dmY acceptable. Will be automatically
+retrieved from parent environments if not specified. If end is named other
+than ReportEnd, it must be specified.}
 
-\item{lgl}{\code{logical} Flag to force logical vector output. \strong{Default \code{FALSE}}}
+\item{lgl}{Default = FALSE, logical, flag to force logical vector output.}
 }
 \value{
 \code{data.frame/logical} after filtering/applying conditional to the
 appropriate columns
 }
 \description{
-Context-sensitive quick filtering or output of logical based on
-\code{start} and \code{end} dates. Primary data elements required for this package
-to work fully: EnrollmentID, EntryDate, EntryAdjust (which will need to be
-created based on ProjectType of the ProjectID associated with the Enrollment
-and MoveInDate), and ExitDate. (Future version will not use EntryAdjust but
-will require ProjectType and MoveInDate.)
+Filters a dataframe of Enrollments where the Exit Date falls
+within the date range specified. Used to report on households leaving a
+project. Useful for measuring outcomes.
 }
 \details{
 Context-sensitive: Automatically detects if nested inside
-of \link[dplyr]{filter} call, if so returns \code{logical} instead of \code{data.frame}
+of \link[dplyr]{filter} call, if so returns \code{logical} instead of \code{data.frame}.
+Enrollment-related functions require Enrollment data elements such as Entry
+Date, Exit Date, Move In Date, and Project Type (of the Enrollment's Project).
+Project Descriptor-related functions require Project data elements such as
+Operating Start/End dates and Bed Inventory Start/End dates.
 }
 \examples{
 \dontrun{
 library(dplyr)
-ReportStart = Sys.Date() - lubridate::weeks(4)
-ReportEnd = Sys.Date()
+ReportStart <- Sys.Date() - lubridate::weeks(4)
+ReportEnd <- Sys.Date()
 identical(
 served_between(qpr_leavers),
 qpr_leavers \%>\% filter(served_between(.))

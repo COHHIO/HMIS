@@ -7,31 +7,45 @@
 between_df(., status, start = ReportStart, end = ReportEnd, lgl = FALSE)
 }
 \arguments{
-\item{.}{\code{(data.frame/tibble)} Input to be filtered. In a \code{magrittr}
-pipe this will always be the first object}
+\item{.}{data.frame/tibble. In a \code{magrittr}, pipe this will always be the
+first object}
 
-\item{status}{\code{(character)} One of:
+\item{status}{character, One of "served", "stayed", "entered", "exited",
+"operating", or "beds_available".
 \itemize{
-\item{\code{"served"}}{ Equivalent of \code{served_between}}
-\item{\code{"stayed"}}{ Equivalent of \code{stayed_between}}
-\item{\code{"entered"}}{ Equivalent of \code{entered_between}}
-\item{\code{"exited"}}{ Equivalent of \code{exited_between}}
-\item{\code{"operating"}}{ Equivalent of \code{operating_between}}
-\item{\code{"beds_available"}}{ Equivalent of \code{beds_available_between}}
-}
-that specifies the type of function to be performed}
+\item{\code{"served"}}{ Enrollments that overlap the date range specified,
+based on Entry and Exit Dates. Equivalent of \code{served_between()}}
+\item{\code{"stayed"}}{ Enrollments that overlap the date range specified,
+based on Exit and the Entry Dates for ES, SH, TH projects and Move In Dates
+for RRH and PSH projects. Requires an EntryAdjust variable in the
+dataframe. EntryAdjust is based on the ProjectType of the ProjectID
+associated with the Enrollment and a valid MoveInDate. (Future version will
+not require EntryAdjust as long as ProjectType and a valid MoveInDate are
+present in the dataset.) Equivalent of \code{stayed_between()}}
+\item{\code{"entered"}}{ Enrollments where the Entry Date is in the date
+range specified. Used to find households who entered during date range.
+Equivalent of \code{entered_between()}}
+\item{\code{"exited"}}{ Enrollments where the Exit Date is in the date range
+specified. Used to find households who exited during date range.
+Equivalent of \code{exited_between()}}
+\item{\code{"operating"}}{ Projects where the Operating Start and End dates
+overlap the date range specified, including those with null Operating End
+Dates. Equivalent of \code{operating_between()}}
+\item{\code{"beds_available"}}{ Projects with active beds during the date
+range specified. Equivalent of \code{beds_available_between()}}
+}}
 
-\item{start}{\code{character/Date} of the end of the timeframe. Characters
-in format mdY, Ymd, dmY acceptable.  \strong{Default \code{ReportStart}} will be
-automatically retrieved from parent environments if not specified. If end is
-named other than ReportStart, it must be specified.}
+\item{start}{Default = ReportStart, character/date of the start of the date
+range. Characters in format mdY, Ymd, dmY acceptable. Will be automatically
+retrieved from parent environments if not specified. If start is named other
+than ReportStart, it must be specified.}
 
-\item{end}{\code{character/Date} of the end of the timeframe. Characters in
-format mdY, Ymd, dmY acceptable.  \strong{Default \code{ReportEnd}} will be
-automatically retrieved from parent environments if not specified. If end is
-named other than ReportEnd, it must be specified.}
+\item{end}{Default = ReportEnd, character/date of the end of the date range.
+Characters in format mdY, Ymd, dmY acceptable. Will be automatically
+retrieved from parent environments if not specified. If end is named other
+than ReportEnd, it must be specified.}
 
-\item{lgl}{\code{logical} Flag to force logical vector output. \strong{Default \code{FALSE}}}
+\item{lgl}{Default = FALSE, logical, flag to force logical vector output.}
 }
 \value{
 \code{data.frame/logical} after filtering/applying conditional to the
@@ -39,21 +53,25 @@ appropriate columns
 }
 \description{
 Context-sensitive quick filtering or output of logical based on
-\code{start} and \code{end} dates. Primary data elements required for this package
-to work fully: EnrollmentID, EntryDate, EntryAdjust (which will need to be
-created based on ProjectType of the ProjectID associated with the Enrollment
-and MoveInDate), and ExitDate. (Future version will not use EntryAdjust but
-will require ProjectType and MoveInDate.)
+a date range. All assumptions about the data are based on the most recent
+HUD HMIS Data Standards. \url{https://www.hudexchange.info/resource/3824/hmis-data-dictionary}
+The family of *_between functions helps HMIS data analysts easily shape
+enrollment or project descriptor data based on a single date range, avoiding
+errors and repeated code.
 }
 \details{
 Context-sensitive: Automatically detects if nested inside
-of \link[dplyr]{filter} call, if so returns \code{logical} instead of \code{data.frame}
+of \link[dplyr]{filter} call, if so returns \code{logical} instead of \code{data.frame}.
+Enrollment-related functions require Enrollment data elements such as Entry
+Date, Exit Date, Move In Date, and Project Type (of the Enrollment's Project).
+Project Descriptor-related functions require Project data elements such as
+Operating Start/End dates and Bed Inventory Start/End dates.
 }
 \examples{
 \dontrun{
 library(dplyr)
-ReportStart = Sys.Date() - lubridate::weeks(4)
-ReportEnd = Sys.Date()
+ReportStart <- Sys.Date() - lubridate::weeks(4)
+ReportEnd <- Sys.Date()
 identical(
 served_between(qpr_leavers),
 qpr_leavers \%>\% filter(served_between(.))

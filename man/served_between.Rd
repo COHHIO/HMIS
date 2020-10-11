@@ -7,20 +7,20 @@
 served_between(., start = ReportStart, end = ReportEnd, lgl = FALSE)
 }
 \arguments{
-\item{.}{\code{(data.frame/tibble)} Input to be filtered. In a \code{magrittr}
-pipe this will always be the first object}
+\item{.}{data.frame/tibble. In a \code{magrittr}, pipe this will always be the
+first object}
 
-\item{start}{\code{character/Date} of the end of the timeframe. Characters
-in format mdY, Ymd, dmY acceptable.  \strong{Default \code{ReportStart}} will be
-automatically retrieved from parent environments if not specified. If end is
-named other than ReportStart, it must be specified.}
+\item{start}{Default = ReportStart, character/date of the start of the date
+range. Characters in format mdY, Ymd, dmY acceptable. Will be automatically
+retrieved from parent environments if not specified. If start is named other
+than ReportStart, it must be specified.}
 
-\item{end}{\code{character/Date} of the end of the timeframe. Characters in
-format mdY, Ymd, dmY acceptable.  \strong{Default \code{ReportEnd}} will be
-automatically retrieved from parent environments if not specified. If end is
-named other than ReportEnd, it must be specified.}
+\item{end}{Default = ReportEnd, character/date of the end of the date range.
+Characters in format mdY, Ymd, dmY acceptable. Will be automatically
+retrieved from parent environments if not specified. If end is named other
+than ReportEnd, it must be specified.}
 
-\item{lgl}{\code{logical} Flag to force logical vector output. \strong{Default \code{FALSE}}}
+\item{lgl}{Default = FALSE, logical, flag to force logical vector output.}
 }
 \value{
 \code{data.frame/logical} after filtering/applying conditional to the
@@ -28,17 +28,22 @@ appropriate columns
 }
 \description{
 Filters a dataframe of Enrollments that overlap the ReportStart
-to ReportEnd date range.
+to ReportEnd date range. Most commonly used in reporting project stays in a
+date range
 }
 \details{
 Context-sensitive: Automatically detects if nested inside
-of \link[dplyr]{filter} call, if so returns \code{logical} instead of \code{data.frame}
+of \link[dplyr]{filter} call, if so returns \code{logical} instead of \code{data.frame}.
+Enrollment-related functions require Enrollment data elements such as Entry
+Date, Exit Date, Move In Date, and Project Type (of the Enrollment's Project).
+Project Descriptor-related functions require Project data elements such as
+Operating Start/End dates and Bed Inventory Start/End dates.
 }
 \examples{
 \dontrun{
 library(dplyr)
-ReportStart = Sys.Date() - lubridate::weeks(4)
-ReportEnd = Sys.Date()
+ReportStart <- Sys.Date() - lubridate::weeks(4)
+ReportEnd <- Sys.Date()
 identical(
 served_between(qpr_leavers),
 qpr_leavers \%>\% filter(served_between(.))
@@ -47,7 +52,7 @@ qpr_leavers \%>\% filter(served_between(.))
 
 }
 \seealso{
-stayed_between()
+stayed_between(), entered_between(), exited_between()
 
 Other _between: 
 \code{\link{beds_available_between}()},
