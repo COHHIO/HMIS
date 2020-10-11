@@ -81,7 +81,7 @@ ReportEnd <- NULL
 #' @importFrom purrr map_lgl
 #' @importFrom dplyr filter
 #' @importFrom utils tail
-
+#' @export
 
 between_df <-
   function(.,
