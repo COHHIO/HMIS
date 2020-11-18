@@ -1,6 +1,24 @@
 ReportStart <- NULL
 ReportEnd <- NULL
 
+#' @title check_names
+#' @keywords Internal
+#' @description Ensure the appropriate names required for filtering are present in the data and if not, give informative error.
+#' @param . \code{(data.frame/tibble)} data input
+#' @param nms \code{(character)} Vector of column names that must be present
+
+check_names <- function(., nms) {
+  .cn <- colnames(.)
+  .lgl <- sapply(nms, `%in%`,  table = .cn)
+  if (!all(.lgl)) {
+    stop("Columns ", paste0(nms, collapse = ", ")," must be present in data.\n",
+         "* Missing: ", paste0(nms[!.lgl], collapse = ", ")
+         , call. = FALSE)
+  }
+}
+
+
+
 #CHANGED New Between function
 #' @title between_df
 #'
@@ -107,6 +125,7 @@ between_df <-
     .cn_chr <- tolower(status)
     # If it's one of served of stayed
     if (stringr::str_detect(.cn_chr, "served|stayed")) {
+      check_names(., c("EntryDate", "EntryAdjust"))
       if (stringr::str_detect(.cn_chr, "served")) {
         # if served use entrydate
         .col <- rlang::sym("EntryDate")
@@ -124,6 +143,7 @@ between_df <-
         .out <- dplyr::filter(.,!!.cond)
       }
     } else if (stringr::str_detect(.cn_chr, "entered|exited")) {
+      check_names(., c("EntryDate", "ExitDate"))
       # if its entered or exited
       if (stringr::str_detect(.cn_chr, "entered")) {
         # if entered use entrydate
@@ -141,6 +161,7 @@ between_df <-
         .out <- dplyr::filter(.,!!.cond)
       }
     } else if (stringr::str_detect(.cn_chr, "beds_available|operating")) {
+      
       if (stringr::str_detect(.cn_chr, "operating")) {
         .prefix <- "Operating"
       } else if (stringr::str_detect(.cn_chr, "beds_available")) {
@@ -148,6 +169,7 @@ between_df <-
       }
       # Construct column names from prefixes
       .cols <- paste0(.prefix, c("StartDate", "EndDate"))
+      check_names(., .cols)
       # Extract the appropriate columns
       .cols <- purrr::map(.cols, rlang::sym)
       .cond <- rlang::expr(!!.cols[[1]] <= dates["end"] &
