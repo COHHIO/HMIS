@@ -181,33 +181,28 @@ check_dates <- function(start, end) {
   # Add input dates to list
   .dates <- list(start = start, end = end)
   # Check if inputs are all Date or POSIXct
-  .test_date <- purrr::map_lgl(.dates, ~ {
-    inherits(.x, c("Date"))
-  })
-  # If not
-  if (!all(.test_date)) {
+  .test_date <- purrr::map_chr(.dates, class)
+  # If not all dates
+  if (!all(.test_date %in% c("Date"))) {
     # map over the ones that aren't
     .dates <- purrr::imap(.dates, ~ {
       if (inherits(.x, c("POSIXct", "POSIXlt", "numeric"))) {
         .out <- lubridate::as_date(.x)
       } else if (inherits(.x, "character")) {
         # try these formats
-        .out <-
-          lubridate::parse_date_time(.x, c("Ymd", "mdY", "dmY"))
+        .out <- lubridate::parse_date_time(.x, c("Ymd", "mdY", "dmY"))
         .out <- as.Date(.out)
       }
       if (!inherits(get0(".out", inherits = FALSE), c("Date"))) {
         # if none of those formats worked throw error and inform user which
         # argument was not able to be parsed
-        rlang::abort(paste(
-          .y,
-          "Could not be parsed to a Datetime, please check argument."
+        rlang::abort(paste0(
+          "Arguments `start` & `end` must be POSIXct, POSIXlt, numeric, or character.\n",
+          "* `", .y, "` is ", .test_date[[.y]]
         ))
       }
       .out
     })
-    # bind the coerced Date/Datetimes to the environment, overwriting the
-    # existing values
   }
   do.call(c, .dates)
 }
