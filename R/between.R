@@ -86,8 +86,8 @@ ReportEnd <- NULL
 between_df <-
   function(.,
            status,
-           start = ReportStart,
-           end = ReportEnd,
+           start = NULL,
+           end = NULL,
            lgl = FALSE) {
     ExitDate <- NULL
     #Check date format and coerce if need be
@@ -196,7 +196,7 @@ check_dates <- function(start, end) {
           lubridate::parse_date_time(.x, c("Ymd", "mdY", "dmY"))
         .out <- as.Date(.out)
       }
-      if (!inherits(.out, c("Date"))) {
+      if (!inherits(get0(".out", inherits = FALSE), c("Date"))) {
         # if none of those formats worked throw error and inform user which
         # argument was not able to be parsed
         rlang::abort(paste(
@@ -228,8 +228,8 @@ check_dates <- function(start, end) {
 
 served_between <-
   function(.,
-           start = ReportStart,
-           end = ReportEnd,
+           start = NULL,
+           end = NULL,
            lgl = FALSE) {
     between_df(., "served", start, end, lgl)
   }
@@ -247,8 +247,8 @@ served_between <-
 
 entered_between <-
   function(.,
-           start = ReportStart,
-           end = ReportEnd,
+           start = NULL,
+           end = NULL,
            lgl = FALSE) {
     between_df(., "entered", start, end, lgl)
   }
@@ -264,8 +264,8 @@ entered_between <-
 
 exited_between <-
   function(.,
-           start = ReportStart,
-           end = ReportEnd,
+           start = NULL,
+           end = NULL,
            lgl = FALSE) {
     between_df(., "exited", start, end, lgl)
   }
@@ -283,8 +283,8 @@ exited_between <-
 
 stayed_between <-
   function(.,
-           start = ReportStart,
-           end = ReportEnd,
+           start = NULL,
+           end = NULL,
            lgl = FALSE) {
     between_df(., "stayed", start, end, lgl)
   }
@@ -300,8 +300,8 @@ stayed_between <-
 
 operating_between <-
   function(.,
-           start = ReportStart,
-           end = ReportEnd,
+           start = NULL,
+           end = NULL,
            lgl = FALSE) {
     between_df(., "operating", start, end, lgl)
   }
@@ -318,8 +318,8 @@ operating_between <-
 #' @export
 
 beds_available_between <- function(.,
-                                   start = ReportStart,
-                                   end = ReportEnd,
+                                   start = NULL,
+                                   end = NULL,
                                    lgl = FALSE) {
   between_df(., "beds_available", start, end, lgl)
 }

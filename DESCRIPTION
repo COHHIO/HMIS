@@ -10,7 +10,10 @@ Authors@R:
            family = "Holsenbeck",
            role = c("ctb", "ctr"),
            email = "sholsen@alumni.emory.edu"))
-Description: HMIS (Homeless Management Information Systems) is a data collection system defined by the US Dept of Housing and Urban Development (HUD). For more information, please visit https://www.hudexchange.info/programs/hmis/. This package will help HMIS Data Analysts work with homeless services data.
+Description: HMIS (Homeless Management Information Systems) is a data collection 
+  system defined by the US Dept of Housing and Urban Development (HUD). For more 
+  information, please visit https://www.hudexchange.info/programs/hmis/. This 
+  package will help HMIS Data Analysts work with homeless services data.
 License: AGPL-3
 Encoding: UTF-8
 LazyData: true
