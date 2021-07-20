@@ -104,8 +104,8 @@ check_names <- function(., nms) {
 between_df <-
   function(.,
            status,
-           start = ReportStart,
-           end = ReportEnd,
+           start = NULL,
+           end = NULL,
            lgl = FALSE) {
     ExitDate <- NULL
     #Check date format and coerce if need be
@@ -245,8 +245,8 @@ check_dates <- function(start, end) {
 
 served_between <-
   function(.,
-           start = ReportStart,
-           end = ReportEnd,
+           start = NULL,
+           end = NULL,
            lgl = FALSE) {
     between_df(., "served", start, end, lgl)
   }
@@ -264,8 +264,8 @@ served_between <-
 
 entered_between <-
   function(.,
-           start = ReportStart,
-           end = ReportEnd,
+           start = NULL,
+           end = NULL,
            lgl = FALSE) {
     between_df(., "entered", start, end, lgl)
   }
@@ -281,8 +281,8 @@ entered_between <-
 
 exited_between <-
   function(.,
-           start = ReportStart,
-           end = ReportEnd,
+           start = NULL,
+           end = NULL,
            lgl = FALSE) {
     between_df(., "exited", start, end, lgl)
   }
@@ -300,8 +300,8 @@ exited_between <-
 
 stayed_between <-
   function(.,
-           start = ReportStart,
-           end = ReportEnd,
+           start = NULL,
+           end = NULL,
            lgl = FALSE) {
     between_df(., "stayed", start, end, lgl)
   }
@@ -317,8 +317,8 @@ stayed_between <-
 
 operating_between <-
   function(.,
-           start = ReportStart,
-           end = ReportEnd,
+           start = NULL,
+           end = NULL,
            lgl = FALSE) {
     between_df(., "operating", start, end, lgl)
   }
@@ -335,8 +335,8 @@ operating_between <-
 #' @export
 
 beds_available_between <- function(.,
-                                   start = ReportStart,
-                                   end = ReportEnd,
+                                   start = NULL,
+                                   end = NULL,
                                    lgl = FALSE) {
   between_df(., "beds_available", start, end, lgl)
 }
