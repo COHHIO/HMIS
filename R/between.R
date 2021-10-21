@@ -203,7 +203,7 @@ check_dates <- function(start, end) {
   # Add input dates to list
   .dates <- list(start = start, end = end)
   # Check if inputs are all Date or POSIXct
-  .test_date <- purrr::map_chr(.dates, class)
+  .test_date <- do.call(c, purrr::map(.dates, class))
   # If not all dates
   if (!all(.test_date %in% c("Date"))) {
     # map over the ones that aren't
