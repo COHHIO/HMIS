@@ -5,7 +5,7 @@ message(.libPaths())
 if (testthat::is_testing()) {
   .data_path <- fs::path("test-between", ext = "rds")
 } else {
-  .data_path <- fs::path("tests", "testthat", "test-between", ext = "rds")
+  .data_path <- here::here("tests", "testthat", "test-between.rds")
 }
 
 dates <- c()
