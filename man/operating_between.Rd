@@ -4,7 +4,7 @@
 \alias{operating_between}
 \title{operating_between}
 \usage{
-operating_between(., start = ReportStart, end = ReportEnd, lgl = FALSE)
+operating_between(., start = NULL, end = NULL, lgl = FALSE)
 }
 \arguments{
 \item{.}{data.frame/tibble. In a \code{magrittr}, pipe this will always be the

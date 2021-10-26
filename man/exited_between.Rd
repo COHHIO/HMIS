@@ -4,7 +4,7 @@
 \alias{exited_between}
 \title{exited_between}
 \usage{
-exited_between(., start = ReportStart, end = ReportEnd, lgl = FALSE)
+exited_between(., start = NULL, end = NULL, lgl = FALSE)
 }
 \arguments{
 \item{.}{data.frame/tibble. In a \code{magrittr}, pipe this will always be the

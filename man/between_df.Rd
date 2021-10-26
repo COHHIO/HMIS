@@ -4,7 +4,7 @@
 \alias{between_df}
 \title{between_df}
 \usage{
-between_df(., status, start = ReportStart, end = ReportEnd, lgl = FALSE)
+between_df(., status, start = NULL, end = NULL, lgl = FALSE)
 }
 \arguments{
 \item{.}{data.frame/tibble. In a \code{magrittr}, pipe this will always be the

@@ -207,28 +207,54 @@ check_dates <- function(start, end) {
   # If not all dates
   if (!all(.test_date %in% c("Date"))) {
     # map over the ones that aren't
-    .dates <- purrr::imap(.dates, ~ {
-      if (inherits(.x, c("POSIXct", "POSIXlt", "numeric"))) {
-        .out <- lubridate::as_date(.x)
-      } else if (inherits(.x, "character")) {
-        # try these formats
-        .out <- lubridate::parse_date_time(.x, c("Ymd", "mdY", "dmY"))
-        .out <- as.Date(.out)
-      }
-      if (!inherits(get0(".out", inherits = FALSE), c("Date"))) {
-        # if none of those formats worked throw error and inform user which
-        # argument was not able to be parsed
-        rlang::abort(paste0(
-          "Arguments `start` & `end` must be POSIXct, POSIXlt, numeric, or character.\n",
-          "* `", .y, "` is ", .test_date[[.y]]
-        ))
-      }
-      .out
-    })
+    .dates <- purrr::imap(.dates, ~make_date(.x))
   }
   do.call(c, .dates)
 }
+#' @title Coerce various inputs to \code{(Date)}
+#'
+#' @param x \code{(character/numeric/POSIXct/lt)}
+#'
+#' @return \code{(Date)}
+#' @export
 
+make_date <- function(x) {
+  UseMethod("make_date")
+}
+
+#' @export
+#' @inherit make_date
+make_date.POSIXct <- make_date.POSIXlt <- function(x) {
+  lubridate::as_date(x)
+}
+#' @export
+#' @inherit make_date
+make_date.numeric <- function(x) {
+  if (all(x < 100000)) {
+    # Handle Dates
+    .out <- lubridate::as_date(x, origin = lubridate::origin)
+  } else {
+    # Handle datetimes
+    .out <- lubridate::as_datetime(signif(x / 10 ^ ceiling(log10(x)), 10) * 10 ^ 10, origin = lubridate::origin, tz = tz)
+    .out <- lubridate::as_date(.out)
+  }
+  .out
+}
+#' @export
+#' @inherit make_date
+make_date.character <- function(x) {
+  lubridate::as_date(lubridate::parse_date_time(.x, c("Ymd", "mdY", "dmY")))
+}
+#' @export
+#' @inherit make_date
+make_date.Date <- function(x) {
+  x
+}
+#' @export
+#' @inherit make_date
+make_date.default <- function(x) {
+  rlang::abort(paste0(x, " is of unknown type"), trace = rlang::trace_back())
+}
 
 # Client Entry Exits Between Date Range Functions -------------------------
 

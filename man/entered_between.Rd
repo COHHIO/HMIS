@@ -4,7 +4,7 @@
 \alias{entered_between}
 \title{entered_between}
 \usage{
-entered_between(., start = ReportStart, end = ReportEnd, lgl = FALSE)
+entered_between(., start = NULL, end = NULL, lgl = FALSE)
 }
 \arguments{
 \item{.}{data.frame/tibble. In a \code{magrittr}, pipe this will always be the

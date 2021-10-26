@@ -4,7 +4,7 @@
 \alias{beds_available_between}
 \title{beds_available_between}
 \usage{
-beds_available_between(., start = ReportStart, end = ReportEnd, lgl = FALSE)
+beds_available_between(., start = NULL, end = NULL, lgl = FALSE)
 }
 \arguments{
 \item{.}{data.frame/tibble. In a \code{magrittr}, pipe this will always be the
