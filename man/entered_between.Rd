@@ -7,9 +7,6 @@
 entered_between(., start = NULL, end = NULL, lgl = FALSE)
 }
 \arguments{
-\item{.}{data.frame/tibble. In a \code{magrittr}, pipe this will always be the
-first object}
-
 \item{start}{Default = ReportStart, character/date of the start of the date
 range. Characters in format mdY, Ymd, dmY acceptable. Will be automatically
 retrieved from parent environments if not specified. If start is named other
@@ -47,7 +44,7 @@ ReportStart <- Sys.Date() - lubridate::weeks(4)
 ReportEnd <- Sys.Date()
 identical(
 served_between(qpr_leavers),
-qpr_leavers \%>\% filter(served_between(.))
+qpr_leavers \%>\% filter(served_between(., lgl = TRUE))
 )
 }
 

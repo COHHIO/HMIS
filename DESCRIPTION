@@ -24,7 +24,7 @@ Imports:
   stringr,
   dplyr
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.1.9001
+RoxygenNote: 7.1.2
 Suggests: 
   rprojroot,
   testthat,

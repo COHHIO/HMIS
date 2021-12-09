@@ -4,12 +4,12 @@
 \alias{check_names}
 \title{check_names}
 \usage{
-check_names(., nms)
+check_names(x, nms)
 }
 \arguments{
-\item{.}{\code{(data.frame/tibble)} data input}
-
 \item{nms}{\code{(character)} Vector of column names that must be present}
+
+\item{.}{\code{(data.frame/tibble)} data input}
 }
 \description{
 Ensure the appropriate names required for filtering are present in the data and if not, give informative error.

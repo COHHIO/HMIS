@@ -4,11 +4,10 @@
 \alias{between_df}
 \title{between_df}
 \usage{
-between_df(., status, start = NULL, end = NULL, lgl = FALSE)
+between_df(x, status, start = NULL, end = NULL, lgl = FALSE)
 }
 \arguments{
-\item{.}{data.frame/tibble. In a \code{magrittr}, pipe this will always be the
-first object}
+\item{x}{\code{(data.frame)} to filter.}
 
 \item{status}{character, One of "served", "stayed", "entered", "exited",
 "operating", or "beds_available".
@@ -74,7 +73,7 @@ ReportStart <- Sys.Date() - lubridate::weeks(4)
 ReportEnd <- Sys.Date()
 identical(
 served_between(qpr_leavers),
-qpr_leavers \%>\% filter(served_between(.))
+qpr_leavers \%>\% filter(served_between(., lgl = TRUE))
 )
 }
 

@@ -7,13 +7,12 @@ ReportEnd <- NULL
 #' @param . \code{(data.frame/tibble)} data input
 #' @param nms \code{(character)} Vector of column names that must be present
 
-check_names <- function(., nms) {
-  .cn <- colnames(.)
+check_names <- function(x, nms) {
+  .cn <- colnames(x)
   .lgl <- sapply(nms, `%in%`,  table = .cn)
   if (!all(.lgl)) {
     stop("Columns ", paste0(nms, collapse = ", ")," must be present in data.\n",
-         "* Missing: ", paste0(nms[!.lgl], collapse = ", ")
-         , call. = FALSE)
+         "* Missing: ", paste0(nms[!.lgl], collapse = ", "))
   }
 }
 
@@ -33,8 +32,7 @@ check_names <- function(., nms) {
 #'   enrollment or project descriptor data based on a single date range, avoiding
 #'   errors and repeated code.
 #'
-#' @param . data.frame/tibble. In a `magrittr`, pipe this will always be the
-#'   first object
+#' @param x \code{(data.frame)} to filter.
 #'
 #' @param status character, One of "served", "stayed", "entered", "exited",
 #'   "operating", or "beds_available".
@@ -90,7 +88,7 @@ check_names <- function(., nms) {
 #' ReportEnd <- Sys.Date()
 #' identical(
 #' served_between(qpr_leavers),
-#' qpr_leavers %>% filter(served_between(.))
+#' qpr_leavers %>% filter(served_between(., lgl = TRUE))
 #' )
 #' }
 #'
@@ -102,7 +100,7 @@ check_names <- function(., nms) {
 #' @export
 
 between_df <-
-  function(.,
+  function(x,
            status,
            start = NULL,
            end = NULL,
@@ -125,11 +123,12 @@ between_df <-
     .cn_chr <- tolower(status)
     # If it's one of served of stayed
     if (stringr::str_detect(.cn_chr, "served|stayed")) {
-      check_names(., c("EntryDate", "EntryAdjust"))
       if (stringr::str_detect(.cn_chr, "served")) {
+        check_names(x, c("EntryDate"))
         # if served use entrydate
         .col <- rlang::sym("EntryDate")
       } else if (stringr::str_detect(.cn_chr, "stayed")) {
+        check_names(x, c("EntryAdjust"))
         # if stayed used entryadjust
         .col <- rlang::sym("EntryAdjust")
       }
@@ -137,28 +136,29 @@ between_df <-
                              (is.na(ExitDate) |
                                 ExitDate >= dates["start"]))
       if (.lgl || lgl) {
-        .out <- rlang::eval_tidy(.cond, data = .)
+        .out <- rlang::eval_tidy(.cond, data = x)
       } else {
         #filter the appropriate columns
-        .out <- dplyr::filter(.,!!.cond)
+        .out <- dplyr::filter(x,!!.cond)
       }
     } else if (stringr::str_detect(.cn_chr, "entered|exited")) {
-      check_names(., c("EntryDate", "ExitDate"))
       # if its entered or exited
       if (stringr::str_detect(.cn_chr, "entered")) {
+        check_names(x, c("EntryDate"))
         # if entered use entrydate
         .col <- rlang::sym("EntryDate")
       } else if (stringr::str_detect(.cn_chr, "exited")) {
+        check_names(x, c("ExitDate"))
         #if exited use exit date
         .col <- rlang::sym("ExitDate")
       }
       .cond <-
         rlang::expr(!!.col >= dates["start"] & !!.col <= dates["end"])
       if (.lgl || lgl) {
-        .out <- rlang::eval_tidy(.cond, data = .)
+        .out <- rlang::eval_tidy(.cond, data = x)
       } else {
         #filter the appropriate columns
-        .out <- dplyr::filter(.,!!.cond)
+        .out <- dplyr::filter(x,!!.cond)
       }
     } else if (stringr::str_detect(.cn_chr, "beds_available|operating")) {
       
@@ -169,17 +169,17 @@ between_df <-
       }
       # Construct column names from prefixes
       .cols <- paste0(.prefix, c("StartDate", "EndDate"))
-      check_names(., .cols)
+      check_names(x, .cols)
       # Extract the appropriate columns
       .cols <- purrr::map(.cols, rlang::sym)
       .cond <- rlang::expr(!!.cols[[1]] <= dates["end"] &
                              (is.na(!!.cols[[2]]) |
                                 !!.cols[[2]] >= dates["start"]))
       if (.lgl || lgl) {
-        .out <- rlang::eval_tidy(.cond, data = .)
+        .out <- rlang::eval_tidy(.cond, data = x)
       } else {
         #filter the appropriate columns
-        .out <- dplyr::filter(.,!!.cond)
+        .out <- dplyr::filter(x,!!.cond)
       }
     }
     .out
