@@ -2,7 +2,7 @@
 % Please edit documentation in R/column_reference.R
 \name{project_type}
 \alias{project_type}
-\title{Project Type Reference Number Translation}
+\title{Project Type Reference Number Translation \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}}
 \usage{
 project_type(ReferenceNo)
 }
@@ -13,5 +13,5 @@ project_type(ReferenceNo)
 \code{(character)} Human-readable project type
 }
 \description{
-Return a human-readable project type provided a reference number
+Deprecated in favor of \code{hud_translations}. Return a human-readable project type provided a reference number
 }

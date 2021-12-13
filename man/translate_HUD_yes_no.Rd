@@ -2,7 +2,7 @@
 % Please edit documentation in R/column_reference.R
 \name{translate_HUD_yes_no}
 \alias{translate_HUD_yes_no}
-\title{Translate HUD reference numbers}
+\title{Translate HUD reference numbers \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}}
 \usage{
 translate_HUD_yes_no(column_name)
 }
@@ -13,5 +13,5 @@ translate_HUD_yes_no(column_name)
 \code{(character)} Human-readable corresponding character vector.
 }
 \description{
-This function translates the HUD csv 1.7 and 1.8 lists and returns yes, no, or unknown as appropriate
+Deprecated in favor of \code{hud_translations} This function translates the HUD csv 1.7 and 1.8 lists and returns yes, no, or unknown as appropriate.
 }

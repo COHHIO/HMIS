@@ -2,7 +2,7 @@
 % Please edit documentation in R/column_reference.R
 \name{living_situation}
 \alias{living_situation}
-\title{Living Situation Reference Number Translation}
+\title{Living Situation Reference Number Translation\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}}
 \usage{
 living_situation(ReferenceNo)
 }
@@ -13,5 +13,5 @@ living_situation(ReferenceNo)
 \code{(character)} Human-readable living situation type
 }
 \description{
-Return a human-readable living situation character vector provided with an integer reference number
+Deprecated in favor of \code{hud_translations}.  Return a human-readable living situation character vector provided with an integer reference number
 }

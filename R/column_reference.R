@@ -1,12 +1,12 @@
 
-#' @title Living Situation Reference Number Translation
-#' @description Return a human-readable living situation character vector provided with an integer reference number
+#' @title Living Situation Reference Number Translation`r lifecycle::badge("deprecated")`
+#' @description Deprecated in favor of `hud_translations`.  Return a human-readable living situation character vector provided with an integer reference number
 #' @param ReferenceNo \code{(integer)} Reference number for living situation type
 #' @return \code{(character)} Human-readable living situation type
 #' @export
 
 living_situation <- function(ReferenceNo) {
-  case_when(
+  dplyr::case_when(
     ReferenceNo == 1 ~ "Emergency shelter/ h/motel paid for by a third party/Host Home shelter",
     ReferenceNo == 2 ~ "Transitional housing",
     ReferenceNo == 3 ~ "Permanent housing (other than RRH) for formerly homeless persons",
@@ -48,14 +48,14 @@ living_situation <- function(ReferenceNo) {
   )
 }
 
-#' @title Project Type Reference Number Translation
-#' @description Return a human-readable project type provided a reference number
+#' @title Project Type Reference Number Translation `r lifecycle::badge("deprecated")`
+#' @description Deprecated in favor of `hud_translations`. Return a human-readable project type provided a reference number
 #' @param ReferenceNo \code{(integer)} Reference number for project type
 #' @return \code{(character)} Human-readable project type
 #' @export
 
 project_type <- function(ReferenceNo){
-  case_when(
+  dplyr::case_when(
     ReferenceNo == 1 ~ "Emergency Shelter",
     ReferenceNo == 2 ~ "Transitional Housing",
     ReferenceNo == 3 ~ "Permanent Supportive Housing",
@@ -68,7 +68,7 @@ project_type <- function(ReferenceNo){
   )
 }
 
-#' @title Yes/No to numeric binary `1/0`
+#' @title Yes/No to numeric binary `1/0` 
 #' @description Change a binary character `"No"` or `NA` to `0` and everything else to `1`
 #' @param column_name \code{(character)} Column vector. Quasiquoted name if used in \link[dplyr]{mutate}.
 #' @return \code{(Integer)} Binary encoded integer vector
@@ -76,17 +76,17 @@ project_type <- function(ReferenceNo){
 
 
 replace_yes_no <- function(column_name) {
-  if_else(column_name == "No" | is.na(column_name), 0, 1)
+  dplyr::if_else(column_name == "No" | is.na(column_name), 0, 1)
 }
 
-#' @title Translate HUD reference numbers
-#' @description Translate HUD reference numbers
+#' @title Translate HUD reference numbers `r lifecycle::badge("deprecated")`
+#' @description Deprecated in favor of `hud_translations`. Translate HUD reference numbers
 #' @param ReferenceNo \code{(integer)} vector. Quasiquoted column name if used in \link[dplyr]{mutate}.
 #' @return \code{(character)} Human-readable corresponding character vector.
 #' @export
 
 enhanced_yes_no_translator <- function(ReferenceNo) {
-  case_when(
+  dplyr::case_when(
     ReferenceNo == 0 ~ "No",
     ReferenceNo == 1 ~ "Yes",
     ReferenceNo == 8 ~ "Client doesn't know",
@@ -95,14 +95,14 @@ enhanced_yes_no_translator <- function(ReferenceNo) {
   )
 }
 
-#' @title Translate HUD reference numbers
-#' @description This function translates the HUD csv 1.7 and 1.8 lists and returns yes, no, or unknown as appropriate
+#' @title Translate HUD reference numbers `r lifecycle::badge("deprecated")`
+#' @description Deprecated in favor of `hud_translations` This function translates the HUD csv 1.7 and 1.8 lists and returns yes, no, or unknown as appropriate. 
 #' @param column_name \code{(integer)} Column vector. Quasiquoted column name if used in \link[dplyr]{mutate}.
 #' @return \code{(character)} Human-readable corresponding character vector.
 #' @export
 
 translate_HUD_yes_no <- function(column_name){
-  case_when(
+  dplyr::case_when(
     column_name == 1 ~ "Yes",
     column_name == 0 ~ "No",
     column_name %in% c(8, 9, 99) ~ "Unknown"
@@ -110,3 +110,58 @@ translate_HUD_yes_no <- function(column_name){
 }
 
     
+#' @title Translate Numeric/Character from a Hash Table with columns Value/Text
+#'
+#' @param x \code{(character/numeric)} vector to translate
+#' @param hash \code{(data.frame)} with Value/Text numeric/character corresponding to the value to translate
+#'
+#' @return \code{(numeric/character)} Whichever class is opposite the input vector
+#' @export
+
+hud_translate <- function(x, hash) {
+  UseMethod("hud_translate")
+}
+#' @title S3 Method for hud_translate
+#' @export
+hud_translate.numeric <- function(x, hash) {
+  out <- rep(NA_character_, length(x))
+  na <- is.na(x)
+  out[!na] <- purrr::map_chr(x[!na], ~hash[[2]][.x == hash[[1]]])
+  out
+}
+#' @title S3 Method for hud_translate
+#' @export
+hud_translate.character <- function(x, hash) {
+  out <- rep(NA_real_, length(x))
+  na <- is.na(x)
+  out[!na] <- purrr::map_dbl(x[!na], ~hash[[1]][.x == hash[[2]]])
+  out
+}
+
+#' @title Translate HUD Coding of Data Elements
+#' @description Translate values from HUD Data elements between values or text
+#' @param .x \code{(character/numeric)} The values to translate
+#' @return \code{(character/numeric)} equivalent, depending on the input
+#' @export
+hud_translations <- list.files(full.names = TRUE, file.path("inst", "export_text_translations", "2022")) |>
+  {\(x) {rlang::set_names(x, stringr::str_remove(basename(x), "\\.feather"))}}() |>
+  purrr::map(~
+               rlang::new_function(args = rlang::pairlist2(.x = , table = FALSE), body = rlang::expr({
+                 hash <- feather::read_feather(system.file("export_text_translations", !!file.path("2022", basename(.x)), package = "hud.extract", mustWork = TRUE))
+                 if (!"Value" %in% names(hash) || !(is.character(hash[[2]]) && is.numeric(hash[[1]]))) {
+                   rlang::warn("Translation table is irregular and isn't supported for translation. Returning table as-is")
+                   return(hash)
+                 }
+                 
+                 if (table) {
+                   out <- hash
+                 } else {
+                   out <- hud_translate(.x, hash)
+                 }
+                 out
+               })
+               )
+  ) |>
+  {\(x) {rlang::list2(
+    !!!x
+  )}}()

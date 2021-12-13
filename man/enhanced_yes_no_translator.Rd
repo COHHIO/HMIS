@@ -2,7 +2,7 @@
 % Please edit documentation in R/column_reference.R
 \name{enhanced_yes_no_translator}
 \alias{enhanced_yes_no_translator}
-\title{Translate HUD reference numbers}
+\title{Translate HUD reference numbers \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}}
 \usage{
 enhanced_yes_no_translator(ReferenceNo)
 }
@@ -13,5 +13,5 @@ enhanced_yes_no_translator(ReferenceNo)
 \code{(character)} Human-readable corresponding character vector.
 }
 \description{
-Translate HUD reference numbers
+Deprecated in favor of \code{hud_translations}. Translate HUD reference numbers
 }
