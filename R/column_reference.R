@@ -147,7 +147,7 @@ hud_translations <- list.files(full.names = TRUE, file.path("inst", "export_text
   {\(x) {rlang::set_names(x, stringr::str_remove(basename(x), "\\.feather"))}}() |>
   purrr::map(~
                rlang::new_function(args = rlang::pairlist2(.x = , table = FALSE), body = rlang::expr({
-                 hash <- feather::read_feather(system.file("export_text_translations", !!file.path("2022", basename(.x)), package = "hud.extract", mustWork = TRUE))
+                 hash <- feather::read_feather(system.file("export_text_translations", !!file.path("2022", basename(.x)), package = "HMIS", mustWork = TRUE))
                  if (!"Value" %in% names(hash) || !(is.character(hash[[2]]) && is.numeric(hash[[1]]))) {
                    rlang::warn("Translation table is irregular and isn't supported for translation. Returning table as-is")
                    return(hash)
