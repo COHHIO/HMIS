@@ -1,6 +1,6 @@
 Package: HMIS
 Title: Filters HMIS Data by Meaningful Date Ranges
-Version: 0.0.0.9000
+Version: 0.0.1
 Authors@R: 
     c(person(given = "Genelle",
            family = "Denzin",
