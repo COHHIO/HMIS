@@ -110,79 +110,49 @@ between_df <-
     dates <- check_dates(start, end)
     
     # if no status supplied, throw error
-    if (missing(status)) {
+    if (missing(status))
       rlang::abort("Please supply a status. See ?between_df for details.")
-    }
+    
     # Check calling context - if inside of a filter call, return the logical
-    .lgl <- purrr::map_lgl(tail(sys.calls(), 5),
-                           ~ {
-                             any(grepl("eval_all_filter", as.character(.x)))
-                           })
-    .lgl <- sum(.lgl) > 0
+    .lgl <- any(purrr::map_lgl(tail(sys.calls(), 5),
+                               ~ {
+                                 any(grepl("eval_all_filter", as.character(.x)))
+                               }))
+    
     # Convert that to a character for regex parsing
     .cn_chr <- tolower(status)
-    # If it's one of served of stayed
-    if (stringr::str_detect(.cn_chr, "served|stayed")) {
-      if (stringr::str_detect(.cn_chr, "served")) {
-        check_names(x, c("EntryDate"))
-        # if served use entrydate
-        .col <- rlang::sym("EntryDate")
-      } else if (stringr::str_detect(.cn_chr, "stayed")) {
-        check_names(x, c("EntryAdjust"))
-        # if stayed used entryadjust
-        .col <- rlang::sym("EntryAdjust")
-      }
-      .cond <- rlang::expr(!!.col <= dates["end"] &
-                             (is.na(ExitDate) |
-                                ExitDate >= dates["start"]))
-      if (.lgl || lgl) {
-        .out <- rlang::eval_tidy(.cond, data = x)
-      } else {
-        #filter the appropriate columns
-        .out <- dplyr::filter(x,!!.cond)
-      }
-    } else if (stringr::str_detect(.cn_chr, "entered|exited")) {
-      # if its entered or exited
-      if (stringr::str_detect(.cn_chr, "entered")) {
-        check_names(x, c("EntryDate"))
-        # if entered use entrydate
-        .col <- rlang::sym("EntryDate")
-      } else if (stringr::str_detect(.cn_chr, "exited")) {
-        check_names(x, c("ExitDate"))
-        #if exited use exit date
-        .col <- rlang::sym("ExitDate")
-      }
-      .cond <-
-        rlang::expr(!!.col >= dates["start"] & !!.col <= dates["end"])
-      if (.lgl || lgl) {
-        .out <- rlang::eval_tidy(.cond, data = x)
-      } else {
-        #filter the appropriate columns
-        .out <- dplyr::filter(x,!!.cond)
-      }
-    } else if (stringr::str_detect(.cn_chr, "beds_available|operating")) {
-      
-      if (stringr::str_detect(.cn_chr, "operating")) {
-        .prefix <- "Operating"
-      } else if (stringr::str_detect(.cn_chr, "beds_available")) {
-        .prefix <- "Inventory"
-      }
-      # Construct column names from prefixes
-      .cols <- paste0(.prefix, c("StartDate", "EndDate"))
-      check_names(x, .cols)
-      # Extract the appropriate columns
-      .cols <- purrr::map(.cols, rlang::sym)
-      .cond <- rlang::expr(!!.cols[[1]] <= dates["end"] &
-                             (is.na(!!.cols[[2]]) |
-                                !!.cols[[2]] >= dates["start"]))
-      if (.lgl || lgl) {
-        .out <- rlang::eval_tidy(.cond, data = x)
-      } else {
-        #filter the appropriate columns
-        .out <- dplyr::filter(x,!!.cond)
-      }
-    }
-    .out
+    .cols <- switch(
+      .cn_chr,
+      entered = ,
+      served = c("EntryDate", "ExitDate"),
+      stayed = c("EntryAdjust", "ExitDate"),
+      exited = rep("ExitDate", 2),
+      operating = paste("Operating", c("StartDate", "EndDate")),
+      beds_available = paste("Inventory", c("StartDate", "EndDate"))
+    )
+    check_names(x, .cols)
+    .cols <- purrr::map(.cols, rlang::sym)
+    .exp <- rlang::exprs(
+      lte_end = !!.cols[[1]] <= dates["end"],
+      na_date = is.na(!!.cols[[2]]),
+      gte_st = !!.cols[[2]] >= dates["start"]
+    )
+    .cond <- switch(
+      .cn_chr,
+      entered = ,
+      exited = rlang::expr(!!.exp$gte_st & !!.exp$lte_end),
+      served = ,
+      stayed = ,
+      operating = ,
+      beds_available = rlang::expr((!!.exp$gte_st |
+                                      !!.exp$na_date) & !!.exp$lte_end)
+    )
+    if (lgl || .lgl)
+      out <- rlang::eval_tidy(.cond, data = x)
+    else
+      out <- dplyr::filter(x,!!.cond)
+    
+    out
   }
 
 
@@ -202,14 +172,12 @@ between_df <-
 check_dates <- function(start, end) {
   # Add input dates to list
   .dates <- list(start = start, end = end)
-  # Check if inputs are all Date or POSIXct
-  .test_date <- do.call(c, purrr::map(.dates, class))
   # If not all dates
-  if (!all(.test_date %in% c("Date"))) {
+  if (!all(purrr::map_lgl(.dates, inherits, what = "Date"))) {
     # map over the ones that aren't
-    .dates <- purrr::imap(.dates, ~make_date(.x))
+    .dates <- purrr::imap(.dates, make_date)
   }
-  do.call(c, .dates)
+  rlang::set_names(do.call(c, .dates), c("start", "end"))
 }
 #' @title Coerce various inputs to \code{(Date)}
 #'
