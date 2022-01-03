@@ -175,7 +175,7 @@ check_dates <- function(start, end) {
   # If not all dates
   if (!all(purrr::map_lgl(.dates, inherits, what = "Date"))) {
     # map over the ones that aren't
-    .dates <- purrr::imap(.dates, make_date)
+    .dates <- purrr::map(.dates, make_date)
   }
   rlang::set_names(do.call(c, .dates), c("start", "end"))
 }
