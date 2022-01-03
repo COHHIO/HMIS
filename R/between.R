@@ -127,8 +127,8 @@ between_df <-
       served = c("EntryDate", "ExitDate"),
       stayed = c("EntryAdjust", "ExitDate"),
       exited = rep("ExitDate", 2),
-      operating = paste("Operating", c("StartDate", "EndDate")),
-      beds_available = paste("Inventory", c("StartDate", "EndDate"))
+      operating = paste0("Operating", c("StartDate", "EndDate")),
+      beds_available = paste0("Inventory", c("StartDate", "EndDate"))
     )
     check_names(x, .cols)
     .cols <- purrr::map(.cols, rlang::sym)
