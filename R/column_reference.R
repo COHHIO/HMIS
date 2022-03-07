@@ -68,7 +68,7 @@ project_type <- function(ReferenceNo){
   )
 }
 
-#' @title Yes/No to numeric binary `1/0` 
+#' @title Yes/No to numeric binary `1/0`
 #' @description Change a binary character `"No"` or `NA` to `0` and everything else to `1`
 #' @param column_name \code{(character)} Column vector. Quasiquoted name if used in \link[dplyr]{mutate}.
 #' @return \code{(Integer)} Binary encoded integer vector
@@ -96,7 +96,7 @@ enhanced_yes_no_translator <- function(ReferenceNo) {
 }
 
 #' @title Translate HUD reference numbers `r lifecycle::badge("deprecated")`
-#' @description Deprecated in favor of `hud_translations` This function translates the HUD csv 1.7 and 1.8 lists and returns yes, no, or unknown as appropriate. 
+#' @description Deprecated in favor of `hud_translations` This function translates the HUD csv 1.7 and 1.8 lists and returns yes, no, or unknown as appropriate.
 #' @param column_name \code{(integer)} Column vector. Quasiquoted column name if used in \link[dplyr]{mutate}.
 #' @return \code{(character)} Human-readable corresponding character vector.
 #' @export
@@ -109,7 +109,7 @@ translate_HUD_yes_no <- function(column_name){
   )
 }
 
-    
+
 #' @title Translate Numeric/Character from a Hash Table with columns Value/Text
 #'
 #' @param x \code{(character/numeric)} vector to translate
@@ -147,12 +147,12 @@ hud_translations <- list.files(full.names = TRUE, file.path("inst", "export_text
   {\(x) {rlang::set_names(x, stringr::str_remove(basename(x), "\\.feather"))}}() |>
   purrr::map(~
                rlang::new_function(args = rlang::pairlist2(.x = , table = FALSE), body = rlang::expr({
-                 hash <- feather::read_feather(system.file("export_text_translations", !!file.path("2022", basename(.x)), package = "HMIS", mustWork = TRUE))
+                 hash <- arrow::read_feather(system.file("export_text_translations", !!file.path("2022", basename(.x)), package = "HMIS", mustWork = TRUE))
                  if (!"Value" %in% names(hash) || !(is.character(hash[[2]]) && is.numeric(hash[[1]]))) {
                    rlang::warn("Translation table is irregular and isn't supported for translation. Returning table as-is")
                    return(hash)
                  }
-                 
+
                  if (table) {
                    out <- hash
                  } else {
