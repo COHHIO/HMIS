@@ -22,11 +22,11 @@ check_names <- function(x, nms) {
 #' @title between_df
 #'
 #' @name between_df
-#' 
+#'
 #' @family _between
 #'
 #' @description Context-sensitive quick filtering or output of logical based on
-#'   a date range. All assumptions about the data are based on the most recent 
+#'   a date range. All assumptions about the data are based on the most recent
 #'   \href{https://www.hudexchange.info/resource/3824/hmis-data-dictionary}{HUD HMIS Data Standards}.
 #'   The family of *_between functions helps HMIS data analysts easily shape
 #'   enrollment or project descriptor data based on a single date range, avoiding
@@ -59,17 +59,17 @@ check_names <- function(x, nms) {
 #'   range specified. Equivalent of \code{beds_available_between()}}
 #' }
 #'
-#' @param start Default = ReportStart, character/date of the start of the date 
+#' @param start Default = ReportStart, character/date of the start of the date
 #'  range. Characters in format mdY, Ymd, dmY acceptable. Will be automatically
-#'  retrieved from parent environments if not specified. If start is named other 
+#'  retrieved from parent environments if not specified. If start is named other
 #'  than ReportStart, it must be specified.
 #'
-#' @param end Default = ReportEnd, character/date of the end of the date range. 
-#'  Characters in format mdY, Ymd, dmY acceptable. Will be automatically 
+#' @param end Default = ReportEnd, character/date of the end of the date range.
+#'  Characters in format mdY, Ymd, dmY acceptable. Will be automatically
 #'  retrieved from parent environments if not specified. If end is named other
 #'  than ReportEnd, it must be specified.
 #'
-#' @param lgl Default = FALSE, logical, flag to force logical vector output. 
+#' @param lgl Default = FALSE, logical, flag to force logical vector output.
 #'
 #' @details Context-sensitive: Automatically detects if nested inside
 #'  of \link[dplyr]{filter} call, if so returns `logical` instead of `data.frame`.
@@ -80,7 +80,7 @@ check_names <- function(x, nms) {
 #'
 #' @return \code{data.frame/logical} after filtering/applying conditional to the
 #'  appropriate columns
-#'  
+#'
 #' @examples
 #' \dontrun{
 #' library(dplyr)
@@ -108,17 +108,17 @@ between_df <-
     ExitDate <- NULL
     #Check date format and coerce if need be
     dates <- check_dates(start, end)
-    
+
     # if no status supplied, throw error
     if (missing(status))
       rlang::abort("Please supply a status. See ?between_df for details.")
-    
+
     # Check calling context - if inside of a filter call, return the logical
     .lgl <- any(purrr::map_lgl(tail(sys.calls(), 5),
                                ~ {
                                  any(grepl("eval_all_filter", as.character(.x)))
                                }))
-    
+
     # Convert that to a character for regex parsing
     .cn_chr <- tolower(status)
     .cols <- switch(
@@ -135,7 +135,7 @@ between_df <-
     .exp <- rlang::exprs(
       lte_end = !!.cols[[1]] <= dates["end"],
       na_date = is.na(!!.cols[[2]]),
-      gte_st = !!.cols[[2]] >= dates["start"]
+      gte_st = !!purrr::when(.cn_chr, .=="entered" ~ .cols[[1]], ~ .cols[[2]]) >= dates["start"]
     )
     .cond <- switch(
       .cn_chr,
@@ -151,7 +151,7 @@ between_df <-
       out <- rlang::eval_tidy(.cond, data = x)
     else
       out <- dplyr::filter(x,!!.cond)
-    
+
     out
   }
 
@@ -232,7 +232,7 @@ make_date.default <- function(x) {
 #' @inherit between_df
 #' @inheritParams between_df
 #' @description Filters a dataframe of Enrollments that overlap the ReportStart
-#'  to ReportEnd date range. Most commonly used in reporting project stays in a 
+#'  to ReportEnd date range. Most commonly used in reporting project stays in a
 #'  date range
 #' @seealso stayed_between(), entered_between(), exited_between()
 #' @export
@@ -254,7 +254,7 @@ served_between <-
 #' @inherit between_df
 #' @family _between
 #' @export
-#' 
+#'
 
 entered_between <-
   function(.,
@@ -283,7 +283,7 @@ exited_between <-
 
 #' @title stayed_between
 #' @name stayed_between
-#' @description Much like served_between(), but for Rapid Rehousing and 
+#' @description Much like served_between(), but for Rapid Rehousing and
 #'  Permanent Supportive Housing projects, it measures from Move In Date to Exit
 #'  Date instead of Entry Date to Exit Date. Useful for when you want to only
 #'  count households who moved into housing or measure the time that household
@@ -302,7 +302,7 @@ stayed_between <-
 
 #' @title operating_between
 #' @name operating_between
-#' @description Filters a dataframe of projects active within the date range 
+#' @description Filters a dataframe of projects active within the date range
 #'  specified. Used to exclude inactive projects from reporting. Requires
 #'  OperatingStartDate and OperatingEndDate in the dataframe.
 #' @inherit between_df
@@ -319,8 +319,8 @@ operating_between <-
 
 #' @title beds_available_between
 #' @name beds_available_between
-#' @description Filters a dataframe of Bed Inventory data where the 
-#'  InventoryStartDate and InventoryEndDate overlap the date range specified. 
+#' @description Filters a dataframe of Bed Inventory data where the
+#'  InventoryStartDate and InventoryEndDate overlap the date range specified.
 #'  Useful for excluding providers from Utilization reporting who do not have
 #'  active bed/unit inventory and bed/unit inventory data not active during the
 #'  specified date range.
