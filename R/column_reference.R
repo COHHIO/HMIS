@@ -143,11 +143,11 @@ hud_translate.character <- function(x, hash) {
 #' @param .x \code{(character/numeric)} The values to translate
 #' @return \code{(character/numeric)} equivalent, depending on the input
 #' @export
-hud_translations <- list.files(full.names = TRUE, file.path("inst", "export_text_translations", "2022")) |>
+hud_translations <- list.files(full.names = TRUE, file.path("inst", "export_text_translations", "2024")) |>
   {\(x) {rlang::set_names(x, stringr::str_remove(basename(x), "\\.feather"))}}() |>
   purrr::map(~
                rlang::new_function(args = rlang::pairlist2(.x = , table = FALSE), body = rlang::expr({
-                 hash <- arrow::read_feather(system.file("export_text_translations", !!file.path("2022", basename(.x)), package = "HMIS", mustWork = TRUE))
+                 hash <- arrow::read_feather(system.file("export_text_translations", !!file.path("2024", basename(.x)), package = "HMIS", mustWork = TRUE))
                  if (!"Value" %in% names(hash) || !(is.character(hash[[2]]) && is.numeric(hash[[1]]))) {
                    rlang::warn("Translation table is irregular and isn't supported for translation. Returning table as-is")
                    return(hash)
