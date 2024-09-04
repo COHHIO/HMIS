@@ -124,6 +124,10 @@ hud_translate <- function(x, hash) {
 #' @title S3 Method for hud_translate
 #' @export
 hud_translate.numeric <- function(x, hash) {
+  if (length(x) == 0) {
+    return(rep(NA_real_, 0))
+  }
+
   out <- rep(NA_character_, length(x))
   na <- is.na(x)
   out[!na] <- purrr::map_chr(x[!na], ~hash[[2]][.x == hash[[1]]])
@@ -132,6 +136,10 @@ hud_translate.numeric <- function(x, hash) {
 #' @title S3 Method for hud_translate
 #' @export
 hud_translate.character <- function(x, hash) {
+  if (length(x) == 0) {
+    return(rep(NA_real_, 0))
+  }
+
   out <- rep(NA_real_, length(x))
   na <- is.na(x)
   out[!na] <- purrr::map_dbl(x[!na], ~hash[[1]][.x == hash[[2]]])
